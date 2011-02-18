@@ -1,0 +1,6 @@
+<tr>
+  <th>{$date}</th>
+  <th>{$category}</th>
+  <th>{$page_id}</th>
+  <th>{$text}</th>
+</tr>

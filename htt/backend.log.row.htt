@@ -1,0 +1,6 @@
+<tr class="{$flipflop}">
+  <td class="tweak_timestamp">{$timestamp}</td>
+  <td class="tweak_category">{$category}</td>
+  <td class="tweak_page_id">{$page_id}</td>
+  <td class="tweak_desc">{$description}</td>
+</tr>
