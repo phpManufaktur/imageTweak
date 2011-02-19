@@ -3,6 +3,11 @@ imageTweak
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
+Release 0.42
+2011-02-19
+Added: class for executing Fancybox
+Added: option for increasing memory limit
+
 Release 0.41
 2011-02-18
 First Beta Release

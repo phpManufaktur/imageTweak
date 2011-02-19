@@ -46,6 +46,7 @@ define('tweak_cfg_date_time',											'd.m.Y - H:i');
 define('tweak_cfg_decimal_separator',							',');
 
 define('tweak_desc_cfg_check_alt_tags',						'Prüfen, ob ALT Attribute gesetzt sind (1=JA, 0=Nein).');
+define('tweak_desc_cfg_class_fancybox',						'CSS Klasse die imageTweak dazu veranlasst, einen LINK für die Fancybox zu setzen. Das Vorschaubild (Thumbnail) wird optimiert, die Fancybox zeigt das Originalbild an. Die Fancybox muss hierzu installiert sein.');
 define('tweak_desc_cfg_class_no_tweak',						'CSS Klasse die imageTweak dazu veranlasst ein Bild zu ignorieren und keine Änderungen durchzuführen');
 define('tweak_desc_cfg_default_alt_tag',					'Alternativ Text, der gesetzt werden soll, wenn das ALT Attribut fehlt oder leer ist.');
 define('tweak_desc_cfg_exec',											'Legen Sie fest ob imageTweak ausgeführt wird oder nicht (0 = NEIN, 1 = JA)');
@@ -54,6 +55,7 @@ define('tweak_desc_cfg_ignore_page_ids',					'Seiten mit den aufgeführten PAGE_
 define('tweak_desc_cfg_ignore_topic_ids',					'TOPICS Artikel mit den aufgeführten TOPIC_IDs werden von imageTweak ignoriert und nicht optimiert. Trennen Sie mehrere IDs mit einem Komma.');
 define('tweak_desc_cfg_image_dir',								'Verzeichnis im /MEDIA Ordner, das imageTweak für die Speicherung von optimierten Bildern verwendet.');
 define('tweak_desc_cfg_limit_log_entries',				'Anzahl der Einträge, die maximal in der LOG Datei von imageTweak gespeichert werden.');
+define('tweak_desc_cfg_memory_limit',							'0=AUTO. Falls Sie die Fehlermeldung "Fatal Error: Allowed memory size of x exhausted [..]" erhalten, können Sie festlegen wieviel Speicher imageTweak zur Verfügung stehen soll. Beginnen Sie mit 32 (Megabyte) und erhöhen Sie den Wert schrittweise um 16 bis die Meldung verschwunden ist.');
 define('tweak_desc_cfg_set_title_tag',						'Wenn kein TITLE Attribut gesetzt ist, wird das ALT Attribut übernommen (1=JA, 0=NEIN) - setzt Prüfung des ALT Attribut voraus.');
 
 define('tweak_error_cfg_id',							 				'Der Konfigurationsdatensatz mit der ID %05d konnte nicht ausgelesen werden!</p>');
@@ -84,6 +86,7 @@ define('tweak_intro_log',													'<p><b>imageTweak</b> protokolliert versch
 define('tweak_intro_log_no_entries',							'<p>Es liegen keine LOG Einträge vor!</p>');
 
 define('tweak_label_cfg_check_alt_tags',					'ALT Attribute prüfen');
+define('tweak_label_cfg_class_fancybox',					'Fancybox aufrufen');
 define('tweak_label_cfg_class_no_tweak',					'Bild ignorieren');
 define('tweak_label_cfg_default_alt_tag',					'ALT Vorgabe');
 define('tweak_label_cfg_exec',										'imageTweak ausführen');
@@ -92,6 +95,7 @@ define('tweak_label_cfg_ignore_page_ids',					'PAGE_IDs ignorieren');
 define('tweak_label_cfg_ignore_topic_ids',				'TOPIC_IDs ignorieren');
 define('tweak_label_cfg_image_dir',								'Verzeichnis für optimierte Bilder');
 define('tweak_label_cfg_limit_log_entries',				'LOG Einträge begrenzen');
+define('tweak_label_cfg_memory_limit',						'Memory Limit');
 define('tweak_label_cfg_set_title_tag',						'TITLE Attribut setzen');
 
 define('tweak_log_mkdir',													'Das Verzeichnis %s wurde angelegt.');

@@ -43,6 +43,7 @@ class processContent {
 	private $tweak_exec;
 	private $ignore_page_ids;
 	private $ignore_topic_ids;
+	private $class_fancybox;
 	
 	public function __construct() {
 		global $tweakCfg;
@@ -69,6 +70,10 @@ class processContent {
 		$this->tweak_exec = $tweakCfg->getValue(dbImageTweakCfg::cfgTweakExec);
 		$this->ignore_page_ids = $tweakCfg->getValue(dbImageTweakCfg::cfgIgnorePageIDs);
 		$this->ignore_topic_ids = $tweakCfg->getValue(dbImageTweakCfg::cfgIgnoreTopicIDs);
+		$this->class_fancybox = $tweakCfg->getValue(dbImageTweakCfg::cfgClassFancybox);
+		$memory_limit = $tweakCfg->getValue(dbImageTweakCfg::cfgMemoryLimit);
+		// Speicher bei Bedarf erhoehen
+		if ($memory_limit > 0) ini_set("memory_limit", sprintf("%sM", $memory_limit));
 	} // __construct()
 	
 	public function setError($error) {
@@ -143,8 +148,10 @@ class processContent {
 					}
 					// nur Bilder pruefen, die sich im /MEDIA Verzeichnis befinden
 					if (!empty($img) && isset($img['src']) && ((strpos($img['src'], $this->media_url) !== false) && (strpos($img['src'], $this->media_url) == 0))) {
+						$org_src = $img['src'];
+						$classes = array();
 						// Bild pruefen, bei Fehler abbrechen
-						if ($this->checkImage($img)) {
+						if ($this->checkImage($img, $classes)) {
 							// aus dem Array der alten Dateien entfernen
 							if (isset($old_tweak_files[basename($img['src'])])) unset($old_tweak_files[basename($img['src'])]);
 							// <img> tag schreiben
@@ -153,6 +160,8 @@ class processContent {
 								$new_tag .= sprintf(' %s="%s"', $key, $value);
 							}
 							$new_tag = sprintf('<img%s />', $new_tag);
+							// ggf. Fancybox setzen
+							if (in_array('tweak-fancy', $classes)) $new_tag = sprintf('<a href="%s" rel="fancybox">%s</a>', $org_src, $new_tag);
 							$this->content = str_replace($img_tag, $new_tag, $this->content);
 						}
 					}
@@ -231,7 +240,7 @@ class processContent {
     return $new_file;	  
 	} // createTweakedFile()
 	
-	private function checkImage(&$image) {
+	private function checkImage(&$image, &$classes) {
 		global $tweakTools;
 		if (!isset($image['src'])) return false; // nothing to do...
 		// CSS Klassen in ein Array einlesen

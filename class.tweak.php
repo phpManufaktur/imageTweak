@@ -81,6 +81,8 @@ class dbImageTweakCfg extends dbConnectLE {
   const cfgIgnorePageIDs		= 'cfgIgnorePageIDs';
   const cfgIgnoreTopicIDs		= 'cfgIgnoreTopicIDs';
   const cfgLimitLogEntries	= 'cfgLimitLogEntries';
+  const cfgClassFancybox		= 'cfgClassFancybx';
+  const cfgMemoryLimit			= 'cfgMemoryLimit';
   
   public $config_array = array(
   	array('tweak_label_cfg_exec', self::cfgTweakExec, self::type_boolean, '1', 'tweak_desc_cfg_exec'),
@@ -92,7 +94,9 @@ class dbImageTweakCfg extends dbConnectLE {
   	array('tweak_label_cfg_set_title_tag', self::cfgSetTitleTag, self::type_boolean, '0', 'tweak_desc_cfg_set_title_tag'),
   	array('tweak_label_cfg_ignore_page_ids', self::cfgIgnorePageIDs, self::type_array, '', 'tweak_desc_cfg_ignore_page_ids'),
   	array('tweak_label_cfg_ignore_topic_ids', self::cfgIgnoreTopicIDs, self::type_array, '', 'tweak_desc_cfg_ignore_topic_ids'),
-  	array('tweak_label_cfg_limit_log_entries', self::cfgLimitLogEntries, self::type_integer, '200', 'tweak_desc_cfg_limit_log_entries')  	   
+  	array('tweak_label_cfg_limit_log_entries', self::cfgLimitLogEntries, self::type_integer, '200', 'tweak_desc_cfg_limit_log_entries'),
+  	array('tweak_label_cfg_class_fancybox', self::cfgClassFancybox, self::type_string, 'tweak-fancy', 'tweak_desc_cfg_class_fancybox'),
+  	array('tweak_label_cfg_memory_limit', self::cfgMemoryLimit, self::type_integer, '0', 'tweak_desc_cfg_memory_limit')  	   
   );  
   
   public function __construct($createTables = false) {
