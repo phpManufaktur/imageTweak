@@ -44,6 +44,8 @@ class processContent {
 	private $ignore_page_ids;
 	private $ignore_topic_ids;
 	private $class_fancybox;
+	private $fancybox_rel;
+	private $fancybox_grp;
 	
 	public function __construct() {
 		global $tweakCfg;
@@ -71,6 +73,8 @@ class processContent {
 		$this->ignore_page_ids = $tweakCfg->getValue(dbImageTweakCfg::cfgIgnorePageIDs);
 		$this->ignore_topic_ids = $tweakCfg->getValue(dbImageTweakCfg::cfgIgnoreTopicIDs);
 		$this->class_fancybox = $tweakCfg->getValue(dbImageTweakCfg::cfgClassFancybox);
+		$this->fancybox_grp = $tweakCfg->getValue(dbImageTweakCfg::cfgFancyboxGrp);
+		$this->fancybox_rel = $tweakCfg->getValue(dbImageTweakCfg::cfgFancyboxRel);
 		$memory_limit = $tweakCfg->getValue(dbImageTweakCfg::cfgMemoryLimit);
 		// Speicher bei Bedarf erhoehen
 		if ($memory_limit > 0) ini_set("memory_limit", sprintf("%sM", $memory_limit));
@@ -161,7 +165,10 @@ class processContent {
 							}
 							$new_tag = sprintf('<img%s />', $new_tag);
 							// ggf. Fancybox setzen
-							if (in_array('tweak-fancy', $classes)) $new_tag = sprintf('<a href="%s" rel="fancybox">%s</a>', $org_src, $new_tag);
+							if (in_array($this->class_fancybox, $classes)) {
+								$class = (!empty($this->fancybox_grp)) ? sprintf(' class="%s"', $this->fancybox_grp) : '';
+								$new_tag = sprintf('<a%s href="%s" rel="%s">%s</a>', $class, $org_src, $this->fancybox_rel, $new_tag);
+							}
 							$this->content = str_replace($img_tag, $new_tag, $this->content);
 						}
 					}
@@ -267,6 +274,20 @@ class processContent {
   		}
   		if ($this->set_title_tag && (!isset($image['title']) || (empty($image['title'])))) {
   			$image['title'] = $image['alt'];
+  		}
+  	}
+  	
+  	// Pruefen ob Hoehe und Breite ueber CSS Parameter gesetzt sind
+  	if (isset($image['style']) && (!empty($image['style']))) {
+  		$style_array = explode(';', $image['style']);
+  		foreach ($style_array as $style) {
+  			if (empty($style)) continue;
+  			list($name, $value) = explode(':', $style);
+  			$name = strtolower(trim($name));
+  			if (($name == 'width') || ($name == 'height')) {
+  				$value = (strpos($value, '%') !== false) ? sprintf('%d%%', intval($value)) : intval($value); 
+  				$image[$name] = $value;
+  			} 
   		}
   	}
   	

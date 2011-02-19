@@ -51,6 +51,8 @@ define('tweak_desc_cfg_class_no_tweak',						'CSS Klasse die imageTweak dazu ver
 define('tweak_desc_cfg_default_alt_tag',					'Alternativ Text, der gesetzt werden soll, wenn das ALT Attribut fehlt oder leer ist.');
 define('tweak_desc_cfg_exec',											'Legen Sie fest ob imageTweak ausgeführt wird oder nicht (0 = NEIN, 1 = JA)');
 define('tweak_desc_cfg_extensions',								'Dateitypen, bei denen imageTweak eine Optimierung durchführen soll. Kleinschreibung beachten!');
+define('tweak_desc_cfg_fancybox_grp',							'Der Gruppenname der von der Fancybox verwendet werden soll. Standard ist: "grouped_elements". Wird kein Gruppenname gesetzt (leer), wird im Link keine Klasse gesetzt.');
+define('tweak_desc_cfg_fancybox_rel',							'Das REL (relation) Attribut für den Aufruf der Fancybox, die Bezeichnung ist beliebig. Standard ist "fancybox".');
 define('tweak_desc_cfg_ignore_page_ids',					'Seiten mit den aufgeführten PAGE_IDs werden von imageTweak ignoriert und nicht optimiert. Trennen Sie mehrere IDs mit einem Komma.');
 define('tweak_desc_cfg_ignore_topic_ids',					'TOPICS Artikel mit den aufgeführten TOPIC_IDs werden von imageTweak ignoriert und nicht optimiert. Trennen Sie mehrere IDs mit einem Komma.');
 define('tweak_desc_cfg_image_dir',								'Verzeichnis im /MEDIA Ordner, das imageTweak für die Speicherung von optimierten Bildern verwendet.');
@@ -91,6 +93,8 @@ define('tweak_label_cfg_class_no_tweak',					'Bild ignorieren');
 define('tweak_label_cfg_default_alt_tag',					'ALT Vorgabe');
 define('tweak_label_cfg_exec',										'imageTweak ausführen');
 define('tweak_label_cfg_extensions',							'Dateitypen');
+define('tweak_label_cfg_fancybox_grp',						'Fancybox: Gruppenname');
+define('tweak_label_cfg_fancybox_rel',						'Fancybox: REL Attribut');
 define('tweak_label_cfg_ignore_page_ids',					'PAGE_IDs ignorieren');
 define('tweak_label_cfg_ignore_topic_ids',				'TOPIC_IDs ignorieren');
 define('tweak_label_cfg_image_dir',								'Verzeichnis für optimierte Bilder');

@@ -81,7 +81,9 @@ class dbImageTweakCfg extends dbConnectLE {
   const cfgIgnorePageIDs		= 'cfgIgnorePageIDs';
   const cfgIgnoreTopicIDs		= 'cfgIgnoreTopicIDs';
   const cfgLimitLogEntries	= 'cfgLimitLogEntries';
-  const cfgClassFancybox		= 'cfgClassFancybx';
+  const cfgClassFancybox		= 'cfgClassFancybox';
+  const cfgFancyboxRel			= 'cfgFancyboxRel';
+  const cfgFancyboxGrp			= 'cfgFancyboxGrp';
   const cfgMemoryLimit			= 'cfgMemoryLimit';
   
   public $config_array = array(
@@ -95,8 +97,10 @@ class dbImageTweakCfg extends dbConnectLE {
   	array('tweak_label_cfg_ignore_page_ids', self::cfgIgnorePageIDs, self::type_array, '', 'tweak_desc_cfg_ignore_page_ids'),
   	array('tweak_label_cfg_ignore_topic_ids', self::cfgIgnoreTopicIDs, self::type_array, '', 'tweak_desc_cfg_ignore_topic_ids'),
   	array('tweak_label_cfg_limit_log_entries', self::cfgLimitLogEntries, self::type_integer, '200', 'tweak_desc_cfg_limit_log_entries'),
-  	array('tweak_label_cfg_class_fancybox', self::cfgClassFancybox, self::type_string, 'tweak-fancy', 'tweak_desc_cfg_class_fancybox'),
-  	array('tweak_label_cfg_memory_limit', self::cfgMemoryLimit, self::type_integer, '0', 'tweak_desc_cfg_memory_limit')  	   
+  	array('tweak_label_cfg_class_fancybox', self::cfgClassFancybox, self::type_string, 'tweak-fancybox', 'tweak_desc_cfg_class_fancybox'),
+  	array('tweak_label_cfg_memory_limit', self::cfgMemoryLimit, self::type_integer, '0', 'tweak_desc_cfg_memory_limit'),
+  	array('tweak_label_cfg_fancybox_grp', self::cfgFancyboxGrp, self::type_string, 'grouped_elements', 'tweak_desc_cfg_fancybox_grp'),
+  	array('tweak_label_cfg_fancybox_rel', self::cfgFancyboxRel, self::type_string, 'fancybox', 'tweak_desc_cfg_fancybox_rel')  	   
   );  
   
   public function __construct($createTables = false) {
