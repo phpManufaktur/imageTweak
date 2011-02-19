@@ -57,18 +57,20 @@ define('tweak_desc_cfg_ignore_page_ids',					'Seiten mit den aufgeführten PAGE_
 define('tweak_desc_cfg_ignore_topic_ids',					'TOPICS Artikel mit den aufgeführten TOPIC_IDs werden von imageTweak ignoriert und nicht optimiert. Trennen Sie mehrere IDs mit einem Komma.');
 define('tweak_desc_cfg_image_dir',								'Verzeichnis im /MEDIA Ordner, das imageTweak für die Speicherung von optimierten Bildern verwendet.');
 define('tweak_desc_cfg_limit_log_entries',				'Anzahl der Einträge, die maximal in der LOG Datei von imageTweak gespeichert werden.');
-define('tweak_desc_cfg_memory_limit',							'0=AUTO. Falls Sie die Fehlermeldung "Fatal Error: Allowed memory size of x exhausted [..]" erhalten, können Sie festlegen wieviel Speicher imageTweak zur Verfügung stehen soll. Beginnen Sie mit 32 (Megabyte) und erhöhen Sie den Wert schrittweise um 16 bis die Meldung verschwunden ist.');
+define('tweak_desc_cfg_memory_limit',							'0=SYSTEM. Falls Sie im Protokoll lesen, dass imageTweak nicht genügend Speicher zur Verfügung steht setzen Sie das Memory Limit auf den vorgeschlagenen Wert und kontrollieren Sie das Protokoll erneut, nachdem Sie einige Seiten aufgerufen haben.');
 define('tweak_desc_cfg_set_title_tag',						'Wenn kein TITLE Attribut gesetzt ist, wird das ALT Attribut übernommen (1=JA, 0=NEIN) - setzt Prüfung des ALT Attribut voraus.');
 
-define('tweak_error_cfg_id',							 				'Der Konfigurationsdatensatz mit der ID %05d konnte nicht ausgelesen werden!</p>');
+define('tweak_error_cfg_id',							 				'Der Konfigurationsdatensatz mit der ID %05d konnte nicht ausgelesen werden!');
 define('tweak_error_cfg_name',						 				'Zu dem Bezeichner %s wurde kein Konfigurationsdatensatz gefunden!');
 define('tweak_error_mkdir',												'Das Verzeichnis %s konnte nicht angelegt werden!');
+define('tweak_error_memory_max',									'Der Speicher reicht imageTweak nicht aus. Zur Zeit stehen %d MB zur Verfügung, erhöhen Sie das "Memory Limit" in den Einstellungen auf %d.');
 define('tweak_error_unlink',											'Die Datei %s konnte nicht gelöscht werden!');
 define('tweak_error_chmod',												'Die Zugriffsrechte für die Datei %s konnten nicht geändert werden!');
 define('tweak_error_touch',												'Die Modifikationszeit für die Datei %s konnte nicht gesetzt werden!');
 define('tweak_error_patch_failed',								'Die automatische Anpassung des Ausgabefilter ist fehlgeschlagen. Bitte informieren Sie sich in der online Dokumentation (http://phpManufaktur.de/image_tweak) über die Möglichkeite der manuellen Anpassung.');
 define('tweak_error_patch_failed_unknown',				'Der Ausgabefilter wurde nicht gefunden, die Installation konnte nicht abgeschlossen werden. Bitte nehmen Sie Kontakt mit der http://phpManufaktur.de auf!');
 define('tweak_error_patch_uninstall',							'Der Ausgabefilter konnte nicht wieder in den ursprünglichen Zustand zurückgeschrieben werden. Installieren Sie bei Bedarf den Ausgabefilter erneut.');
+define('tweak_error_set_memory_limit',						'memory_limit konnte nicht auf %dM gesetzt werden.');
 
 define('tweak_header_category',										'Typ');
 define('tweak_header_cfg',												'Einstellungen');

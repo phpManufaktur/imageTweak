@@ -46,6 +46,8 @@ class processContent {
 	private $class_fancybox;
 	private $fancybox_rel;
 	private $fancybox_grp;
+	private $memory_limit;
+	private $memory_max;
 	
 	public function __construct() {
 		global $tweakCfg;
@@ -75,9 +77,20 @@ class processContent {
 		$this->class_fancybox = $tweakCfg->getValue(dbImageTweakCfg::cfgClassFancybox);
 		$this->fancybox_grp = $tweakCfg->getValue(dbImageTweakCfg::cfgFancyboxGrp);
 		$this->fancybox_rel = $tweakCfg->getValue(dbImageTweakCfg::cfgFancyboxRel);
-		$memory_limit = $tweakCfg->getValue(dbImageTweakCfg::cfgMemoryLimit);
-		// Speicher bei Bedarf erhoehen
-		if ($memory_limit > 0) ini_set("memory_limit", sprintf("%sM", $memory_limit));
+		// Memory Limit in MB aus der Konfiguration
+		$x = $tweakCfg->getValue(dbImageTweakCfg::cfgMemoryLimit);
+		// Umrechnung in Bytes
+		$this->memory_limit = $x*1024*1024;
+		if (($this->memory_limit > 0) &&  (false === (ini_set("memory_limit", sprintf("%sM", $x))))) {
+			// Fehler beim Setzen des neuen Memory Limits
+			$this->setError(sprintf(tweak_error_set_memory_limit, $this->memory_limit));
+		}
+		else {
+			$x = ini_get('memory_limit');
+			$this->memory_limit = $tweakTools->ini_return_bytes($x);
+		}
+		// maximale Speichernutzung: 90%
+		$this->memory_max = floor($this->memory_limit*0.9);
 	} // __construct()
 	
 	public function setError($error) {
@@ -113,6 +126,8 @@ class processContent {
 	} // getContent()
 	
 	public function exec($content) {
+		// bei Fehler sofort raus
+		if ($this->isError()) return $content;
 		// sofort wieder raus, wenn imageTweak ausgeschaltet ist
 		if (!$this->tweak_exec) return $content;
 		// pruefen ob die PAGE_ID ignoriere werden soll
@@ -124,6 +139,7 @@ class processContent {
 		// Inhalt pruefen und zurueckgeben
 		return $this->checkContent();
 	} // exec()
+	
 	
 	
 	private function checkContent() {
@@ -149,6 +165,12 @@ class processContent {
 							$value = substr($value, 1, strlen($value)-2);
 							$img[strtolower(trim($key))] = trim($value);
 						}
+					}
+					if (($x = memory_get_usage()) >= $this->memory_max) {
+						// es steht nicht genuegend Speicher zur Verfuegung
+						$limit = (int) $this->memory_limit/1024/1024;
+						$this->setError(sprintf(tweak_error_memory_max, $limit, $limit+8));
+						return $this->content;						
 					}
 					// nur Bilder pruefen, die sich im /MEDIA Verzeichnis befinden
 					if (!empty($img) && isset($img['src']) && ((strpos($img['src'], $this->media_url) !== false) && (strpos($img['src'], $this->media_url) == 0))) {
@@ -304,6 +326,10 @@ class processContent {
   			// kein Optimierungsbedarf
   			return true;
   		}
+  		if (($show_width > $origin_width) || ($show_height > $origin_height)) {
+  			// Bild ist hochgezoomt
+  			return true;
+  		}
   		$tweaked_file = $this->createFileName($path_parts['filename'], $path_parts['extension'], $show_width, $show_height);
   		if (file_exists($this->tweak_path.$tweaked_file)) {
   			// optimierte Datei existiert bereits
@@ -331,6 +357,7 @@ class processContent {
   			$image['width'] = $origin_width;
   			return true;
   		}
+  		if ($show_height > $origin_height) return true; // Bild ist gezoomt
   		// relative Breite berechnen
   		$percent = (int) ($show_height/($origin_height/100));
   		$image['width'] = (int) ($origin_width/100)*$percent;
@@ -346,6 +373,7 @@ class processContent {
   			$image['height'] = $origin_height;
   			return true;
   		}	
+  		if ($show_width > $origin_width) return true; // Bild ist gezoomt
   		// relative Hoehe berechnen
   		$percent = (int) ($show_width/($origin_width/100));
   		$image['height'] = (int) ($origin_height/100)*$percent;
@@ -362,10 +390,11 @@ class processContent {
   	}
   	elseif ((strpos($show_width, '%') !== false) && (strpos($show_height, '%') !== false)) {
   		// Prozentangaben fuer Breite und Hoehe
-  		$percent = $tweakTools->str2int($show_height);
-  		$image['height'] = (int) ($origin_height/100)*$percent;
-  		$percent = $tweakTools->str2int($show_width);
-  		$image['width'] = (int) ($origin_width/100)*$percent;
+  		$h_percent = $tweakTools->str2int($show_height);
+  		$w_percent = $tweakTools->str2int($show_width);
+  		if (($h_percent > 100) ||($w_percent > 100)) return true; // Bild is gezoomt
+  		$image['height'] = (int) ($origin_height/100)*$h_percent;
+  		$image['width'] = (int) ($origin_width/100)*$w_percent;
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
   	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
@@ -374,6 +403,7 @@ class processContent {
   	elseif (strpos($show_width, '%') !== false) {
   		// Breite prozentual gesetzt
   		$percent = $tweakTools->str2int($show_width);
+  		if ($percent > 100) return true; // Bild ist gezoomt
   		$image['width'] = (int) ($origin_width/100)*$percent;
   		$image['height'] = (int) ($origin_height/100)*$percent;
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
@@ -384,6 +414,7 @@ class processContent {
   	elseif (strpos($show_height, '%') !== false) {
   		// Hoehe prozentual gesetzt
   		$percent = $tweakTools->str2int($show_height);
+  		if ($percent > 100) return true; // Bild ist gezoomt
   		$image['width'] = (int) ($origin_width/100)*$percent;
   		$image['height'] = (int) ($origin_height/100)*$percent;
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
