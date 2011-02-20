@@ -73,7 +73,7 @@ class processContent {
 					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_mkdir, $this->tweak_path)));
 				}
 				else {
-					$this->writeLog(sprintf(tweak_log_mkdir, $this->tweak_path), dbImageTweakLog::category_info);
+					$this->writeLog(sprintf(tweak_log_mkdir, $this->tweak_path), 'info');
 				}
 			}
 			$this->tweak_url = str_replace(WB_PATH, WB_URL, $this->tweak_path);
