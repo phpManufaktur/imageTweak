@@ -16,7 +16,6 @@
 if (!defined('WB_PATH')) die('invalid call of '.$_SERVER['SCRIPT_NAME']);
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tweak.php');
-require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tools.php');
 
 if (!class_exists('Dwoo')) require_once(WB_PATH.'/modules/dwoo/include.php');
 global $parser;
@@ -24,11 +23,9 @@ if (!is_object($parser)) $parser = new Dwoo();
 
 global $tweakCfg;
 global $tweakLog;
-global $tweakTools;
 
 if (!is_object($tweakCfg)) $tweakCfg = new dbImageTweakCfg(true);
 if (!is_object($tweakLog)) $tweakLog = new dbImageTweakLog(true);
-if (!is_object($tweakTools)) $tweakTools = new tweakTools();
 
 $backend = new tweakBackend();
 $backend->action();

@@ -15,7 +15,8 @@
 // prevent this file from being accessed directly
 if (!defined('WB_PATH')) die('invalid call of '.$_SERVER['SCRIPT_NAME']);
 
-
+require_once(WB_PATH.'/framework/functions.php');
+  	
 class tweakTools {
 	
   const   	unkownUser = 'UNKNOWN USER';

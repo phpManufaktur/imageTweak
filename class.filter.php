@@ -13,7 +13,7 @@
  */
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tweak.php');
-require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tools.php');
+require_once(WB_PATH.'/framework/functions.php');
 
 function tweakImages($content) {
 	$tweak = new processContent();
@@ -22,11 +22,9 @@ function tweakImages($content) {
 
 global $tweakCfg;
 global $tweakLog;
-global $tweakTools;
 
 if (!is_object($tweakCfg)) $tweakCfg = new dbImageTweakCfg(true);
 if (!is_object($tweakLog)) $tweakLog = new dbImageTweakLog(true);
-if (!is_object($tweakTools)) $tweakTools = new tweakTools();
 
 class processContent {
 	
@@ -51,9 +49,8 @@ class processContent {
 	
 	public function __construct() {
 		global $tweakCfg;
-		global $tweakTools;
 		$tweaked = $tweakCfg->getValue(dbImageTweakCfg::cfgTweakImageDir);
-		$tweaked = $tweakTools->removeLeadingSlash($tweakTools->addSlash($tweaked));		
+		$tweaked = $this->removeLeadingSlash($this->addSlash($tweaked));		
 		$this->tweak_path = WB_PATH.MEDIA_DIRECTORY.'/'.$tweaked;
 		$this->tweak_path .= (defined('TOPIC_ID')) ? 'topics/'.TOPIC_ID.'/' : 'pages/'.PAGE_ID.'/';
 		if (!file_exists($this->tweak_path)) {
@@ -87,7 +84,7 @@ class processContent {
 		}
 		else {
 			$x = ini_get('memory_limit');
-			$this->memory_limit = $tweakTools->ini_return_bytes($x);
+			$this->memory_limit = $this->iniReturnBytes($x);
 		}
 		// maximale Speichernutzung: 90%
 		$this->memory_max = floor($this->memory_limit*0.9);
@@ -125,6 +122,24 @@ class processContent {
 		return $this->content;
 	} // getContent()
 	
+	public function iniReturnBytes($size_str) {
+    switch (substr ($size_str, -1)):
+      case 'M': case 'm': return (int)$size_str * 1048576;
+      case 'K': case 'k': return (int)$size_str * 1024;
+      case 'G': case 'g': return (int)$size_str * 1073741824;
+      default: return $size_str;
+    endswitch;
+	} // ini_return_bytes()
+	
+	public function removeLeadingSlash($path) {
+  	$path = substr($path, 0, 1) == "/" ? substr($path, 1, strlen($path)) : $path;
+  	return $path;
+  } // removeLeadingSlash()
+	
+  public function addSlash($path) {
+  	$path = substr($path, strlen($path)-1, 1) == "/" ? $path : $path."/";
+  	return $path;  }
+  
 	public function exec($content) {
 		// bei Fehler sofort raus
 		if ($this->isError()) return $content;
@@ -207,10 +222,13 @@ class processContent {
 	} // checkContent()
 	
 	private function createFileName($filename, $extension, $width, $height) {
-		global $tweakTools;
-		$filename = $tweakTools->cleanFileName($filename);
+		$filename = page_filename($filename);
 		return sprintf('%s_%d_%d.%s', $filename, $width, $height, $extension);
 	} // 
+	
+	public function correctPathSeparator($path) {
+		return (DIRECTORY_SEPARATOR == '/') ? trim(str_replace("\\", "/", $path)) : trim(str_replace("/", "\\", $path));
+	} // correctSlashes()
 	
 	private function createTweakedFile($filename, $extension, $file_path, $new_width, $new_height, $origin_width, $origin_height, $origin_filemtime) {
 		switch ($extension):
@@ -270,7 +288,6 @@ class processContent {
 	} // createTweakedFile()
 	
 	private function checkImage(&$image, &$classes) {
-		global $tweakTools;
 		if (!isset($image['src'])) return false; // nothing to do...
 		// CSS Klassen in ein Array einlesen
   	$classes = isset($image['class']) ? explode(" ", $image['class']) : array();
@@ -280,7 +297,7 @@ class processContent {
   	$image['src'] = urldecode($image['src']);
   	
   	$img_path = str_replace(WB_URL, WB_PATH, $image['src']);
-  	$img_path = $tweakTools->correctPathSeparator($img_path);
+  	$img_path = $this->correctPathSeparator($img_path);
   	// pruefen, ob es sich um einen gueltigen Dateityp handelt
   	$path_parts = pathinfo($img_path);
   	// strtolower extension
@@ -390,8 +407,8 @@ class processContent {
   	}
   	elseif ((strpos($show_width, '%') !== false) && (strpos($show_height, '%') !== false)) {
   		// Prozentangaben fuer Breite und Hoehe
-  		$h_percent = $tweakTools->str2int($show_height);
-  		$w_percent = $tweakTools->str2int($show_width);
+  		$h_percent = intval($show_height);
+  		$w_percent = intval($show_width);
   		if (($h_percent > 100) ||($w_percent > 100)) return true; // Bild is gezoomt
   		$image['height'] = (int) ($origin_height/100)*$h_percent;
   		$image['width'] = (int) ($origin_width/100)*$w_percent;
@@ -402,7 +419,7 @@ class processContent {
   	}
   	elseif (strpos($show_width, '%') !== false) {
   		// Breite prozentual gesetzt
-  		$percent = $tweakTools->str2int($show_width);
+  		$percent = intval($show_width);
   		if ($percent > 100) return true; // Bild ist gezoomt
   		$image['width'] = (int) ($origin_width/100)*$percent;
   		$image['height'] = (int) ($origin_height/100)*$percent;
@@ -413,7 +430,7 @@ class processContent {
   	}
   	elseif (strpos($show_height, '%') !== false) {
   		// Hoehe prozentual gesetzt
-  		$percent = $tweakTools->str2int($show_height);
+  		$percent = intval($show_height);
   		if ($percent > 100) return true; // Bild ist gezoomt
   		$image['width'] = (int) ($origin_width/100)*$percent;
   		$image['height'] = (int) ($origin_height/100)*$percent;
