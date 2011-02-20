@@ -57,6 +57,7 @@ define('tweak_desc_cfg_ignore_page_ids',					'Seiten mit den aufgeführten PAGE_
 define('tweak_desc_cfg_ignore_topic_ids',					'TOPICS Artikel mit den aufgeführten TOPIC_IDs werden von imageTweak ignoriert und nicht optimiert. Trennen Sie mehrere IDs mit einem Komma.');
 define('tweak_desc_cfg_image_dir',								'Verzeichnis im /MEDIA Ordner, das imageTweak für die Speicherung von optimierten Bildern verwendet.');
 define('tweak_desc_cfg_limit_log_entries',				'Anzahl der Einträge, die maximal in der LOG Datei von imageTweak gespeichert werden.');
+define('tweak_desc_cfg_memory_buffer',						'Speicherreserve in Megabyte, die von imageTweak nicht angefasst wird um einen Speicherüberlauf zu verhindern. Beträgt das Memory Limit 32 MB und Memory Buffer 4 MB, dann belegt imageTweak max. 28 MB des verfügbaren Speicher.');
 define('tweak_desc_cfg_memory_limit',							'0=SYSTEM. Falls Sie im Protokoll lesen, dass imageTweak nicht genügend Speicher zur Verfügung steht setzen Sie das Memory Limit auf den vorgeschlagenen Wert und kontrollieren Sie das Protokoll erneut, nachdem Sie einige Seiten aufgerufen haben.');
 define('tweak_desc_cfg_set_title_tag',						'Wenn kein TITLE Attribut gesetzt ist, wird das ALT Attribut übernommen (1=JA, 0=NEIN) - setzt Prüfung des ALT Attribut voraus.');
 
@@ -71,6 +72,7 @@ define('tweak_error_patch_failed',								'Die automatische Anpassung des Ausgab
 define('tweak_error_patch_failed_unknown',				'Der Ausgabefilter wurde nicht gefunden, die Installation konnte nicht abgeschlossen werden. Bitte nehmen Sie Kontakt mit der http://phpManufaktur.de auf!');
 define('tweak_error_patch_uninstall',							'Der Ausgabefilter konnte nicht wieder in den ursprünglichen Zustand zurückgeschrieben werden. Installieren Sie bei Bedarf den Ausgabefilter erneut.');
 define('tweak_error_set_memory_limit',						'memory_limit konnte nicht auf %dM gesetzt werden.');
+define('tweak_error_skip_initialize',							'Die Seite mit der ID %d wurde übersprungen, da imageTweak neu initialisiert werden musste.');
 
 define('tweak_header_category',										'Typ');
 define('tweak_header_cfg',												'Einstellungen');
@@ -101,10 +103,12 @@ define('tweak_label_cfg_ignore_page_ids',					'PAGE_IDs ignorieren');
 define('tweak_label_cfg_ignore_topic_ids',				'TOPIC_IDs ignorieren');
 define('tweak_label_cfg_image_dir',								'Verzeichnis für optimierte Bilder');
 define('tweak_label_cfg_limit_log_entries',				'LOG Einträge begrenzen');
+define('tweak_label_cfg_memory_buffer',						'Memory Buffer');
 define('tweak_label_cfg_memory_limit',						'Memory Limit');
 define('tweak_label_cfg_set_title_tag',						'TITLE Attribut setzen');
 
 define('tweak_log_mkdir',													'Das Verzeichnis %s wurde angelegt.');
+define('tweak_log_initialize_cfg',								'Die Konfiguration für imageTweak wurde neu initialisiert.');
 
 define('tweak_msg_already_patched',								'Der Ausgabefilter ist bereits angepasst, es wurden keine Änderungen vorgenommen. Bitte nutzen Sie die online Dokumentation (http://phpmanufaktur.de/image_tweak) um mehr über imageTweak zu erfahren!');
 define('tweak_msg_cfg_add_exists',								'<p>Der Konfigurationsdatensatz mit dem Bezeichner <b>%s</b> existiert bereits und kann nicht noch einmal hinzugefügt werden!</p>');

@@ -26,10 +26,6 @@ else {
 // dbConnect_LE einbinden
 if (!class_exists('dbConnectLE')) require_once(WB_PATH.'/modules/dbconnect_le/include.php');
 
-require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tools.php');
-global $tweakTools;
-if (!is_object($tweakTools)) $tweakTools = new tweakTools();
-
 
 class dbImageTweakCfg extends dbConnectLE {
 	
@@ -85,6 +81,7 @@ class dbImageTweakCfg extends dbConnectLE {
   const cfgFancyboxRel			= 'cfgFancyboxRel';
   const cfgFancyboxGrp			= 'cfgFancyboxGrp';
   const cfgMemoryLimit			= 'cfgMemoryLimit';
+  const cfgMemoryBuffer			= 'cfgMemoryBuffer';
   
   public $config_array = array(
   	array('tweak_label_cfg_exec', self::cfgTweakExec, self::type_boolean, '1', 'tweak_desc_cfg_exec'),
@@ -100,7 +97,8 @@ class dbImageTweakCfg extends dbConnectLE {
   	array('tweak_label_cfg_class_fancybox', self::cfgClassFancybox, self::type_string, 'tweak-fancybox', 'tweak_desc_cfg_class_fancybox'),
   	array('tweak_label_cfg_memory_limit', self::cfgMemoryLimit, self::type_integer, '0', 'tweak_desc_cfg_memory_limit'),
   	array('tweak_label_cfg_fancybox_grp', self::cfgFancyboxGrp, self::type_string, 'grouped_elements', 'tweak_desc_cfg_fancybox_grp'),
-  	array('tweak_label_cfg_fancybox_rel', self::cfgFancyboxRel, self::type_string, 'fancybox', 'tweak_desc_cfg_fancybox_rel')  	   
+  	array('tweak_label_cfg_fancybox_rel', self::cfgFancyboxRel, self::type_string, 'fancybox', 'tweak_desc_cfg_fancybox_rel'),
+  	array('tweak_label_cfg_memory_buffer', self::cfgMemoryBuffer, self::type_integer, '4', 'tweak_desc_cfg_memory_buffer')  	   
   );  
   
   public function __construct($createTables = false) {
@@ -237,7 +235,6 @@ class dbImageTweakCfg extends dbConnectLE {
    * @return BOOL Ergebnis
    */
   public function setValue($new_value, $id) {
-  	global $tweakTools;
   	$value = '';
   	$where = array();
   	$where[self::field_id] = $id;
@@ -292,7 +289,7 @@ class dbImageTweakCfg extends dbConnectLE {
   	endswitch;
   	unset($config[self::field_id]);
   	$config[self::field_value] = (string) $value;
-  	$config[self::field_update_by] = $tweakTools->getDisplayName();
+  	$config[self::field_update_by] = 'SYSTEM';
   	$config[self::field_update_when] = date('Y-m-d H:i:s');
   	if (!$this->sqlUpdateRecord($config, $where)) {
   		$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $this->getError()));

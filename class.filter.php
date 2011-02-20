@@ -12,7 +12,6 @@
  * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
  */
 
-require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tweak.php');
 require_once(WB_PATH.'/framework/functions.php');
 
 function tweakImages($content) {
@@ -20,11 +19,6 @@ function tweakImages($content) {
 	return $tweak->exec($content);
 } // tweakImages()
 
-global $tweakCfg;
-global $tweakLog;
-
-if (!is_object($tweakCfg)) $tweakCfg = new dbImageTweakCfg(true);
-if (!is_object($tweakLog)) $tweakLog = new dbImageTweakLog(true);
 
 class processContent {
 	
@@ -33,66 +27,79 @@ class processContent {
 	private $tweak_url;
 	private $media_url;
 	private $error;
-	private $class_no_tweak;
-	private $file_types;
-	private $check_alt_tags;
-	private $default_alt_tag;
-	private $set_title_tag;
-	private $tweak_exec;
-	private $ignore_page_ids;
-	private $ignore_topic_ids;
-	private $class_fancybox;
-	private $fancybox_rel;
-	private $fancybox_grp;
 	private $memory_limit;
 	private $memory_max;
 	
+	const cfgTweakExec				= 'cfgTweakExec';
+  const cfgTweakImageDir		= 'cfgTweakImageDir';
+  const cfgClassNoTweak			= 'cfgClassNoTweak';
+  const cfgExtensions				= 'cfgExtensions';
+  const cfgCheckAltTags			= 'cfgCheckAltTags';
+  const cfgDefaultAltTag		= 'cfgDefaultAltTag';
+  const cfgSetTitleTag			= 'cfgSetTitleTag';
+  const cfgIgnorePageIDs		= 'cfgIgnorePageIDs';
+  const cfgIgnoreTopicIDs		= 'cfgIgnoreTopicIDs';
+  const cfgClassFancybox		= 'cfgClassFancybox';
+  const cfgFancyboxRel			= 'cfgFancyboxRel';
+  const cfgFancyboxGrp			= 'cfgFancyboxGrp';
+  const cfgMemoryLimit			= 'cfgMemoryLimit';
+  const cfgMemoryBuffer			= 'cfgMemoryBuffer';
+  
+  private $settings = array(
+  	self::cfgTweakExec				=> 'cfgTweakExec',
+  	self::cfgTweakImageDir		=> 'cfgTweakImageDir',
+	  self::cfgClassNoTweak			=> 'cfgClassNoTweak',
+	  self::cfgExtensions				=> 'cfgExtensions',
+	  self::cfgCheckAltTags			=> 'cfgCheckAltTags',
+	  self::cfgDefaultAltTag		=> 'cfgDefaultAltTag',
+	  self::cfgSetTitleTag			=> 'cfgSetTitleTag',
+	  self::cfgIgnorePageIDs		=> 'cfgIgnorePageIDs',
+	  self::cfgIgnoreTopicIDs		=> 'cfgIgnoreTopicIDs',
+	  self::cfgClassFancybox		=> 'cfgClassFancybox',
+	  self::cfgFancyboxRel			=> 'cfgFancyboxRel',
+	  self::cfgFancyboxGrp			=> 'cfgFancyboxGrp',
+	  self::cfgMemoryLimit			=> 'cfgMemoryLimit',
+	  self::cfgMemoryBuffer			=> 'cfgMemoryBuffer'
+  );
+  
 	public function __construct() {
-		global $tweakCfg;
-		$tweaked = $tweakCfg->getValue(dbImageTweakCfg::cfgTweakImageDir);
-		$tweaked = $this->removeLeadingSlash($this->addSlash($tweaked));		
-		$this->tweak_path = WB_PATH.MEDIA_DIRECTORY.'/'.$tweaked;
-		$this->tweak_path .= (defined('TOPIC_ID')) ? 'topics/'.TOPIC_ID.'/' : 'pages/'.PAGE_ID.'/';
-		if (!file_exists($this->tweak_path)) {
-			if (!mkdir($this->tweak_path, 0755, true)) {
-				$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_mkdir, $this->tweak_path)));
+		if ($this->getSettings()) {
+			$tweaked = $this->settings[self::cfgTweakImageDir];
+			$tweaked = $this->removeLeadingSlash($this->addSlash($tweaked));		
+			$this->tweak_path = WB_PATH.MEDIA_DIRECTORY.'/'.$tweaked;
+			$this->tweak_path .= (defined('TOPIC_ID')) ? 'topics/'.TOPIC_ID.'/' : 'pages/'.PAGE_ID.'/';
+			if (!file_exists($this->tweak_path)) {
+				if (!mkdir($this->tweak_path, 0755, true)) {
+					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_mkdir, $this->tweak_path)));
+				}
+				else {
+					$this->writeLog(sprintf(tweak_log_mkdir, $this->tweak_path), dbImageTweakLog::category_info);
+				}
+			}
+			$this->tweak_url = str_replace(WB_PATH, WB_URL, $this->tweak_path);
+			$this->media_url = WB_URL.MEDIA_DIRECTORY.'/';
+			
+			// Memory Limit in MB aus der Konfiguration
+			$limit = $this->settings[self::cfgMemoryLimit];
+			// Umrechnung in Bytes
+			$this->memory_limit = $limit*1024*1024;
+			if (($this->memory_limit > 0) &&  (false === (ini_set("memory_limit", sprintf("%sM", $limit))))) {
+				// Fehler beim Setzen des neuen Memory Limits
+				$this->setError(sprintf(tweak_error_set_memory_limit, $this->memory_limit));
 			}
 			else {
-				$this->writeLog(sprintf(tweak_log_mkdir, $this->tweak_path), dbImageTweakLog::category_info);
+				$limit = ini_get('memory_limit');
+				$this->memory_limit = $this->iniReturnBytes($limit);
 			}
+			// maximale Speichernutzung festlegen
+			$buffer = $this->settings[self::cfgMemoryBuffer]*1024*1024;
+			$this->memory_max = $this->memory_limit-$buffer;
 		}
-		$this->tweak_url = str_replace(WB_PATH, WB_URL, $this->tweak_path);
-		$this->media_url = WB_URL.MEDIA_DIRECTORY.'/';
-		$this->class_no_tweak = $tweakCfg->getValue(dbImageTweakCfg::cfgClassNoTweak);
-		$this->file_types = $tweakCfg->getValue(dbImageTweakCfg::cfgExtensions);
-		$this->check_alt_tags = $tweakCfg->getValue(dbImageTweakCfg::cfgCheckAltTags);
-		$this->default_alt_tag = $tweakCfg->getValue(dbImageTweakCfg::cfgDefaultAltTag);
-		$this->set_title_tag = $tweakCfg->getValue(dbImageTweakCfg::cfgSetTitleTag);
-		$this->tweak_exec = $tweakCfg->getValue(dbImageTweakCfg::cfgTweakExec);
-		$this->ignore_page_ids = $tweakCfg->getValue(dbImageTweakCfg::cfgIgnorePageIDs);
-		$this->ignore_topic_ids = $tweakCfg->getValue(dbImageTweakCfg::cfgIgnoreTopicIDs);
-		$this->class_fancybox = $tweakCfg->getValue(dbImageTweakCfg::cfgClassFancybox);
-		$this->fancybox_grp = $tweakCfg->getValue(dbImageTweakCfg::cfgFancyboxGrp);
-		$this->fancybox_rel = $tweakCfg->getValue(dbImageTweakCfg::cfgFancyboxRel);
-		// Memory Limit in MB aus der Konfiguration
-		$x = $tweakCfg->getValue(dbImageTweakCfg::cfgMemoryLimit);
-		// Umrechnung in Bytes
-		$this->memory_limit = $x*1024*1024;
-		if (($this->memory_limit > 0) &&  (false === (ini_set("memory_limit", sprintf("%sM", $x))))) {
-			// Fehler beim Setzen des neuen Memory Limits
-			$this->setError(sprintf(tweak_error_set_memory_limit, $this->memory_limit));
-		}
-		else {
-			$x = ini_get('memory_limit');
-			$this->memory_limit = $this->iniReturnBytes($x);
-		}
-		// maximale Speichernutzung: 90%
-		$this->memory_max = floor($this->memory_limit*0.9);
-	} // __construct()
+	} // __construct() 
 	
 	public function setError($error) {
 		$this->error = $error;
-		$this->writeLog($error, dbImageTweakLog::category_error);
+		$this->writeLog($error, 'error');
 	} // setError()
 	
 	public function getError() {
@@ -104,15 +111,81 @@ class processContent {
 	} // isError()
 	
 	private function writeLog($message, $message_type) {
-		global $tweakLog;
-		$data = array(
-			dbImageTweakLog::field_category => $message_type,
-			dbImageTweakLog::field_page_id	=> PAGE_ID,
-			dbImageTweakLog::field_text			=> $message
-		);
-		// just write to LOG - here is no chance to trigger additional errors
-		$tweakLog->sqlInsertRecord($data);
+		global $database;
+		$SQL = sprintf(	"INSERT INTO %smod_img_tweak_log (log_category, log_page_id, log_text) VALUES ('%s','%s','%s')",
+										TABLE_PREFIX,
+										$message_type,
+										PAGE_ID,
+										$message);
+		// just write to LOG - here is no chance to trigger any errors
+		$database->query($SQL);
 	} // writeLog()
+	
+	private function initializeSettings() {
+		require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tweak.php');
+		$tweakCfg = new dbImageTweakCfg();
+		if ($tweakCfg->isError()) {
+			$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $tweakCfg->getError()));
+			return false;
+		}
+		$this->writeLog(tweak_log_initialize_cfg, 'info');
+		return true;
+	}
+	
+	private function getSettings() {
+		global $database;
+		$SQL = "SELECT cfg_name, cfg_value FROM ".TABLE_PREFIX."mod_img_tweak_config WHERE cfg_status = '1'";
+		$result = $database->query($SQL);
+		if ($database->is_error()) {
+			$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $database->get_error()));
+			return false;
+		}
+		while (false !== ($data = $result->fetchRow(MYSQL_ASSOC))) {
+			switch ($data['cfg_name']):
+				case self::cfgSetTitleTag:
+				case self::cfgTweakExec:
+				case self::cfgCheckAltTags:
+					// boolean field
+					$this->settings[$data['cfg_name']] = (bool) $data['cfg_value'];
+					break;
+				case self::cfgFancyboxRel:
+				case self::cfgFancyboxGrp:
+				case self::cfgDefaultAltTag:
+				case self::cfgTweakImageDir:
+				case self::cfgClassNoTweak:
+				case self::cfgClassFancybox:
+					// string field
+					$this->settings[$data['cfg_name']] = $data['cfg_value'];
+					break;
+				case self::cfgIgnoreTopicIDs:
+				case self::cfgIgnorePageIDs:
+				case self::cfgExtensions:
+					// array field
+					$this->settings[$data['cfg_name']] = explode(",", $data['cfg_value']);
+					break;
+				case self::cfgMemoryBuffer:
+				case self::cfgMemoryLimit:
+					// integer field
+					$this->settings[$data['cfg_name']] = (integer) $data['cfg_value'];
+					break;
+			endswitch;
+		}
+		// pruefen ob alle Felder initialisiert wurden
+		foreach ($this->settings as $key => $value) {
+			if ($key == (string) $value) {
+				if ($this->initializeSettings()) {
+					// Konfiguration neu initialisiert
+					$this->setError(sprintf(tweak_error_skip_initialize, PAGE_ID));
+					return false;
+				}
+				else {
+					// Fehler bei der Initialisierung
+					return false;
+				}
+			}
+		}
+		return true;
+	} // getSettings()
 	
 	public function setContent($content) {
 		$this->content = $content;
@@ -144,19 +217,17 @@ class processContent {
 		// bei Fehler sofort raus
 		if ($this->isError()) return $content;
 		// sofort wieder raus, wenn imageTweak ausgeschaltet ist
-		if (!$this->tweak_exec) return $content;
+		if (!$this->settings[self::cfgTweakExec]) return $content;
 		// pruefen ob die PAGE_ID ignoriere werden soll
-		if (in_array(PAGE_ID, $this->ignore_page_ids)) return $content;
+		if (in_array(PAGE_ID, $this->settings[self::cfgIgnorePageIDs])) return $content;
 		// pruefen ob die TOPIC_ID ignoriert werden soll
-		if (defined('TOPIC_ID') && (in_array(TOPIC_ID, $this->ignore_topic_ids))) return $content;
+		if (defined('TOPIC_ID') && (in_array(TOPIC_ID, $this->settings[self::cfgIgnoreTopicIDs]))) return $content;
 		// Inhalt uebernehmen
 		$this->setContent($content);
 		// Inhalt pruefen und zurueckgeben
 		return $this->checkContent();
 	} // exec()
-	
-	
-	
+		
 	private function checkContent() {
 		// optimierte Dateien auslesen
 		$complete = scandir($this->tweak_path);
@@ -165,7 +236,6 @@ class processContent {
 		foreach ($complete as $item) {
 			if (is_file($this->tweak_path.$item)) $old_tweak_files[$item] = true;
 		}
-		
 		preg_match_all('/<img[^>]*>/', $this->content, $matches);
 		foreach ($matches as $match) {
 			foreach ($match as $img_tag) {
@@ -202,9 +272,9 @@ class processContent {
 							}
 							$new_tag = sprintf('<img%s />', $new_tag);
 							// ggf. Fancybox setzen
-							if (in_array($this->class_fancybox, $classes)) {
-								$class = (!empty($this->fancybox_grp)) ? sprintf(' class="%s"', $this->fancybox_grp) : '';
-								$new_tag = sprintf('<a%s href="%s" rel="%s">%s</a>', $class, $org_src, $this->fancybox_rel, $new_tag);
+							if (in_array($this->settings[self::cfgClassFancybox], $classes)) { 
+								$class = (!empty($this->settings[self::cfgFancyboxGrp])) ? sprintf(' class="%s"', $this->settings[self::cfgFancyboxGrp]) : '';
+								$new_tag = sprintf('<a%s href="%s" rel="%s">%s</a>', $class, $org_src, $this->settings[self::cfgFancyboxRel], $new_tag);
 							}
 							$this->content = str_replace($img_tag, $new_tag, $this->content);
 						}
@@ -258,7 +328,6 @@ class processContent {
     }
     imagecopyresampled(	$new_image, $origin_image, 0, 0, 0, 0, $new_width, $new_height, $origin_width, $origin_height);
 
-    
     $new_file = $this->createFileName($filename, $extension, $new_width, $new_height);
     $new_file = $this->tweak_path.$new_file;
 
@@ -287,15 +356,13 @@ class processContent {
     return $new_file;	  
 	} // createTweakedFile()
 	
-	private function checkImage(&$image, &$classes) {
+	private function checkImage(&$image, &$classes=array()) {
 		if (!isset($image['src'])) return false; // nothing to do...
 		// CSS Klassen in ein Array einlesen
   	$classes = isset($image['class']) ? explode(" ", $image['class']) : array();
   	// pruefen ob dieses Bild ignoriert werden soll
-  	if (in_array($this->class_no_tweak, $classes)) return false;
-  	
-  	$image['src'] = urldecode($image['src']);
-  	
+  	if (in_array($this->settings[self::cfgClassNoTweak], $classes)) return false;  	
+  	$image['src'] = urldecode($image['src']);  	
   	$img_path = str_replace(WB_URL, WB_PATH, $image['src']);
   	$img_path = $this->correctPathSeparator($img_path);
   	// pruefen, ob es sich um einen gueltigen Dateityp handelt
@@ -303,19 +370,18 @@ class processContent {
   	// strtolower extension
   	$path_parts['extension'] = strtolower($path_parts['extension']);
   	// ungueltige Dateinendung?
-  	if (!in_array($path_parts['extension'], $this->file_types)) return false;
+  	if (!in_array($path_parts['extension'], $this->settings[self::cfgExtensions])) return false;
   	// existiert die Datei?
   	if (!file_exists($img_path)) return false;
   	// ALT und TITLE Tags pruefen
-  	if ($this->check_alt_tags) {
+  	if ($this->settings[self::cfgCheckAltTags]) {
   		if (!isset($image['alt']) || (empty($image['alt']))) {
-  			$image['alt'] = utf8_encode($this->default_alt_tag);
+  			$image['alt'] = $this->settings[self::cfgDefaultAltTag];
   		}
-  		if ($this->set_title_tag && (!isset($image['title']) || (empty($image['title'])))) {
+  		if ($this->settings[self::cfgSetTitleTag] && (!isset($image['title']) || (empty($image['title'])))) {
   			$image['title'] = $image['alt'];
   		}
-  	}
-  	
+  	}  	
   	// Pruefen ob Hoehe und Breite ueber CSS Parameter gesetzt sind
   	if (isset($image['style']) && (!empty($image['style']))) {
   		$style_array = explode(';', $image['style']);
@@ -328,11 +394,9 @@ class processContent {
   				$image[$name] = $value;
   			} 
   		}
-  	}
-  	
+  	}  	
   	$show_width = (isset($image['width']) && !empty($image['width'])) ? $image['width'] : 0;
   	$show_height = (isset($image['height']) && !empty($image['width'])) ? $image['height'] : 0;
-  	
   	// Originial Abmessungen ermitteln  	
   	list($origin_width, $origin_height) = getimagesize($img_path);
   	$origin_filemtime = filemtime($img_path);

@@ -3,6 +3,11 @@ imageTweak
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
+Release 0.44
+2011-02-20
+Changed: improved data handling in filter routine for speed up scanning
+Removed: class.tools.php is no longer needed
+
 Release 0.43
 2011-02-19
 Changed: improved memory handling to avoid fatal errors if memory limit is too small
