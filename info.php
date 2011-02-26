@@ -15,8 +15,8 @@
 $module_directory     = 'image_tweak';
 $module_name          = 'imageTweak';
 $module_function      = 'tool';
-$module_version       = '0.44';
-$module_status        = 'Beta';
+$module_version       = '0.45';
+$module_status        = 'Stable';
 $module_platform      = '2.8'; 
 $module_author        = 'Ralf Hertsch, Berlin (Germany)';
 $module_license       = 'GNU General Public License';

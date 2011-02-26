@@ -451,7 +451,7 @@ class processContent {
   		if ($show_height > $origin_height) return true; // Bild ist gezoomt
   		// relative Breite berechnen
   		$percent = (int) ($show_height/($origin_height/100));
-  		$image['width'] = (int) ($origin_width/100)*$percent;
+  		$image['width'] = (int) (($origin_width/100)*$percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
   	  																												$image['width'], $show_height, $origin_width, $origin_height, $origin_filemtime))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
@@ -467,7 +467,7 @@ class processContent {
   		if ($show_width > $origin_width) return true; // Bild ist gezoomt
   		// relative Hoehe berechnen
   		$percent = (int) ($show_width/($origin_width/100));
-  		$image['height'] = (int) ($origin_height/100)*$percent;
+  		$image['height'] = (int) (($origin_height/100)*$percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
   	  																												$show_width, $image['height'], $origin_width, $origin_height, $origin_filemtime))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
@@ -484,8 +484,8 @@ class processContent {
   		$h_percent = intval($show_height);
   		$w_percent = intval($show_width);
   		if (($h_percent > 100) ||($w_percent > 100)) return true; // Bild is gezoomt
-  		$image['height'] = (int) ($origin_height/100)*$h_percent;
-  		$image['width'] = (int) ($origin_width/100)*$w_percent;
+  		$image['height'] = (int) (($origin_height/100)*$h_percent);
+  		$image['width'] = (int) (($origin_width/100)*$w_percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
   	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
@@ -495,8 +495,8 @@ class processContent {
   		// Breite prozentual gesetzt
   		$percent = intval($show_width);
   		if ($percent > 100) return true; // Bild ist gezoomt
-  		$image['width'] = (int) ($origin_width/100)*$percent;
-  		$image['height'] = (int) ($origin_height/100)*$percent;
+  		$image['width'] = (int) (($origin_width/100)*$percent);
+  		$image['height'] = (int) (($origin_height/100)*$percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
   	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
@@ -506,8 +506,8 @@ class processContent {
   		// Hoehe prozentual gesetzt
   		$percent = intval($show_height);
   		if ($percent > 100) return true; // Bild ist gezoomt
-  		$image['width'] = (int) ($origin_width/100)*$percent;
-  		$image['height'] = (int) ($origin_height/100)*$percent;
+  		$image['width'] = (int) (($origin_width/100)*$percent);
+  		$image['height'] = (int) (($origin_height/100)*$percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
   	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
