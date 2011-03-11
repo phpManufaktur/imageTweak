@@ -82,6 +82,7 @@ class dbImageTweakCfg extends dbConnectLE {
   const cfgFancyboxGrp			= 'cfgFancyboxGrp';
   const cfgMemoryLimit			= 'cfgMemoryLimit';
   const cfgMemoryBuffer			= 'cfgMemoryBuffer';
+  const cfgJPEGquality			= 'cfgJPEGquality';
   
   public $config_array = array(
   	array('tweak_label_cfg_exec', self::cfgTweakExec, self::type_boolean, '1', 'tweak_desc_cfg_exec'),
@@ -98,7 +99,8 @@ class dbImageTweakCfg extends dbConnectLE {
   	array('tweak_label_cfg_memory_limit', self::cfgMemoryLimit, self::type_integer, '0', 'tweak_desc_cfg_memory_limit'),
   	array('tweak_label_cfg_fancybox_grp', self::cfgFancyboxGrp, self::type_string, 'grouped_elements', 'tweak_desc_cfg_fancybox_grp'),
   	array('tweak_label_cfg_fancybox_rel', self::cfgFancyboxRel, self::type_string, 'fancybox', 'tweak_desc_cfg_fancybox_rel'),
-  	array('tweak_label_cfg_memory_buffer', self::cfgMemoryBuffer, self::type_integer, '4', 'tweak_desc_cfg_memory_buffer')  	   
+  	array('tweak_label_cfg_memory_buffer', self::cfgMemoryBuffer, self::type_integer, '4', 'tweak_desc_cfg_memory_buffer'),
+  	array('tweak_label_cfg_jpeg_quality', self::cfgJPEGquality, self::type_integer, '90', 'tweak_desc_cfg_jpeg_quality')  	   
   );  
   
   public function __construct($createTables = false) {

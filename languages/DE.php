@@ -56,6 +56,7 @@ define('tweak_desc_cfg_fancybox_rel',							'Das REL (relation) Attribut für de
 define('tweak_desc_cfg_ignore_page_ids',					'Seiten mit den aufgeführten PAGE_IDs werden von imageTweak ignoriert und nicht optimiert. Trennen Sie mehrere IDs mit einem Komma.');
 define('tweak_desc_cfg_ignore_topic_ids',					'TOPICS Artikel mit den aufgeführten TOPIC_IDs werden von imageTweak ignoriert und nicht optimiert. Trennen Sie mehrere IDs mit einem Komma.');
 define('tweak_desc_cfg_image_dir',								'Verzeichnis im /MEDIA Ordner, das imageTweak für die Speicherung von optimierten Bildern verwendet.');
+define('tweak_desc_cfg_jpeg_quality',							'JPEG Qualität, die von imageTweak bei der Komprimierung angestrebt wird, Standard ist 90% - dies entspricht einer Kompression von 10%');
 define('tweak_desc_cfg_limit_log_entries',				'Anzahl der Einträge, die maximal in der LOG Datei von imageTweak gespeichert werden.');
 define('tweak_desc_cfg_memory_buffer',						'Speicherreserve in Megabyte, die von imageTweak nicht angefasst wird um einen Speicherüberlauf zu verhindern. Beträgt das Memory Limit 32 MB und Memory Buffer 4 MB, dann belegt imageTweak max. 28 MB des verfügbaren Speicher.');
 define('tweak_desc_cfg_memory_limit',							'0=SYSTEM. Falls Sie im Protokoll lesen, dass imageTweak nicht genügend Speicher zur Verfügung steht setzen Sie das Memory Limit auf den vorgeschlagenen Wert und kontrollieren Sie das Protokoll erneut, nachdem Sie einige Seiten aufgerufen haben.');
@@ -102,6 +103,7 @@ define('tweak_label_cfg_fancybox_rel',						'Fancybox: REL Attribut');
 define('tweak_label_cfg_ignore_page_ids',					'PAGE_IDs ignorieren');
 define('tweak_label_cfg_ignore_topic_ids',				'TOPIC_IDs ignorieren');
 define('tweak_label_cfg_image_dir',								'Verzeichnis für optimierte Bilder');
+define('tweak_label_cfg_jpeg_quality',						'JPEG Qualität');
 define('tweak_label_cfg_limit_log_entries',				'LOG Einträge begrenzen');
 define('tweak_label_cfg_memory_buffer',						'Memory Buffer');
 define('tweak_label_cfg_memory_limit',						'Memory Limit');

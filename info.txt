@@ -3,6 +3,10 @@ imageTweak
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
+Release 0.46
+xxxx-xx-xx
+Added: Option to change the quality of JPEG images
+
 Release 0.45
 2011-02-26
 Fixed: Error calculating missing width or height value.

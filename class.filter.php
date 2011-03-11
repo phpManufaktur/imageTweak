@@ -54,6 +54,7 @@ class processContent {
   const cfgFancyboxGrp			= 'cfgFancyboxGrp';
   const cfgMemoryLimit			= 'cfgMemoryLimit';
   const cfgMemoryBuffer			= 'cfgMemoryBuffer';
+  const cfgJPEGquality  		= 'cfgJPEGquality';
   
   private $settings = array(
   	self::cfgTweakExec				=> 'cfgTweakExec',
@@ -69,7 +70,8 @@ class processContent {
 	  self::cfgFancyboxRel			=> 'cfgFancyboxRel',
 	  self::cfgFancyboxGrp			=> 'cfgFancyboxGrp',
 	  self::cfgMemoryLimit			=> 'cfgMemoryLimit',
-	  self::cfgMemoryBuffer			=> 'cfgMemoryBuffer'
+	  self::cfgMemoryBuffer			=> 'cfgMemoryBuffer',
+	  self::cfgJPEGquality			=> 'cfgJPEGquality'
   );
   
 	public function __construct() {
@@ -175,6 +177,7 @@ class processContent {
 					break;
 				case self::cfgMemoryBuffer:
 				case self::cfgMemoryLimit:
+				case self::cfgJPEGquality:
 					// integer field
 					$this->settings[$data['cfg_name']] = (integer) $data['cfg_value'];
 					break;
@@ -193,6 +196,9 @@ class processContent {
 					return false;
 				}
 			}
+		}
+		if (($this->settings[self::cfgJPEGquality] < 15) || ($this->settings[self::cfgJPEGquality] > 100)) {
+			$this->settings[self::cfgJPEGquality] = 75;
 		}
 		return true;
 	} // getSettings()
@@ -348,7 +354,7 @@ class processContent {
        	break;
       case 'jpg':
       case 'jpeg': 
-       	imagejpeg($new_image, $new_file); 
+       	imagejpeg($new_image, $new_file, $this->settings[self::cfgJPEGquality]); 
        	break;
       case 'png': 
        	imagepng($new_image, $new_file); 
