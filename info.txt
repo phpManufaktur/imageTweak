@@ -4,7 +4,8 @@ Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
 Release 0.46
-xxxx-xx-xx
+2011-04-20
+Added: CSS Crop function, additional Classes: top, bottom, left, right, zoom[]
 Added: Option to change the quality of JPEG images
 
 Release 0.45

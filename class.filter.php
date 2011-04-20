@@ -74,6 +74,14 @@ class processContent {
 	  self::cfgJPEGquality			=> 'cfgJPEGquality'
   );
   
+  const classCrop						= 'crop';
+  const classTop						= 'top';
+  const classBottom					= 'bottom';
+  const classLeft						= 'left';
+  const classRight					= 'right';
+  const classZoom						= 'zoom';
+  const classNoCache				= 'no-cache';
+  
 	public function __construct() {
 		if ($this->getSettings()) {
 			$tweaked = $this->settings[self::cfgTweakImageDir];
@@ -316,7 +324,7 @@ class processContent {
 		return (DIRECTORY_SEPARATOR == '/') ? trim(str_replace("\\", "/", $path)) : trim(str_replace("/", "\\", $path));
 	} // correctSlashes()
 	
-	private function createTweakedFile($filename, $extension, $file_path, $new_width, $new_height, $origin_width, $origin_height, $origin_filemtime) {
+	private function createTweakedFile($filename, $extension, $file_path, $new_width, $new_height, $origin_width, $origin_height, $origin_filemtime, $classes=array()) {
 		switch ($extension):
 	  	case 'gif':
 	  		$origin_image = imagecreatefromgif($file_path);
@@ -342,7 +350,53 @@ class processContent {
       $transparent = imagecolorallocatealpha($new_image, 255, 255, 255, 127);
       imagefilledrectangle($new_image, 0, 0, $new_width, $new_height, $transparent);
     }
-    imagecopyresampled(	$new_image, $origin_image, 0, 0, 0, 0, $new_width, $new_height, $origin_width, $origin_height);
+    if (in_array(self::classCrop, $classes)) {
+    	// don't change image size...
+    	$zoom = 100;
+    	foreach ($classes as $class) { 
+    		if (stripos($class, self::classZoom.'[') !== false) {
+    			$x = substr($class, strpos($class, '[')+1, (strpos($class, ']') - (strpos($class, '[')+1))); 
+    			$zoom = (int) $x; 
+    			if ($zoom < 1) $zoom = 1;
+    			if ($zoom > 100) $zoom = 100;
+    		}
+    	}
+    	// crop image
+    	if (in_array(self::classLeft, $classes)) {
+    		$x_pos = 0;
+    	}
+    	elseif (in_array(self::classRight, $classes)) {
+    		$x_pos = $origin_width-$new_width;
+    	}
+    	else {
+    		$x_pos = ((int) $origin_width/2)-((int) $new_width/2);	
+    	}
+    	if (in_array(self::classTop, $classes)) {
+    		$y_pos = 0;
+    	}
+    	elseif (in_array(self::classBottom, $classes)) {
+    		$y_pos = $origin_height-$new_height;
+    	}
+    	else {
+    		$y_pos = ((int) $origin_height/2) - ((int)$new_height/2);
+    	}
+    	if ($zoom !== 100) {
+    		// change image size and crop image
+    		$faktor = $zoom/100;
+    		$zoom_width = (int) ($origin_width*$faktor);
+    		$zoom_height = (int) ($origin_height*$faktor); echo "$origin_width - $zoom_width : $origin_height - $zoom_height";
+    		imagecopyresampled($new_image, $origin_image, 0, 0, $x_pos, $y_pos, $new_width, $new_height, $zoom_width, $zoom_height);
+    	}
+    	else {
+    		// only crop image
+    		imagecopy($new_image, $origin_image, 0, 0, $x_pos, $y_pos, $new_width, $new_height);
+    	}
+    }
+    else {
+    	// resample image
+    	imagecopyresampled($new_image, $origin_image, 0, 0, 0, 0, $new_width, $new_height, $origin_width, $origin_height);
+    }
+    
 
     $new_file = $this->createFileName($filename, $extension, $new_width, $new_height);
     $new_file = $this->tweak_path.$new_file;
@@ -431,7 +485,7 @@ class processContent {
   		if (file_exists($this->tweak_path.$tweaked_file)) {
   			// optimierte Datei existiert bereits
   			$tweaked_filemtime = filemtime($this->tweak_path.$tweaked_file);
-  			if (($origin_filemtime == $tweaked_filemtime) && (($origin_filemtime !== false) && ($tweaked_filemtime !== false))) {
+  			if ((!in_array(self::classNoCache, $classes) && ($origin_filemtime == $tweaked_filemtime)) && (($origin_filemtime !== false) && ($tweaked_filemtime !== false))) {
   				$image['src'] = $this->tweak_url.$tweaked_file;
   				return true;
   			}
@@ -443,7 +497,7 @@ class processContent {
   			}
   		}
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
-  	  																												$show_width, $show_height, $origin_width, $origin_height, $origin_filemtime))) return false;
+  	  																												$show_width, $show_height, $origin_width, $origin_height, $origin_filemtime, $classes))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
   	  return true;
   	}
@@ -459,7 +513,7 @@ class processContent {
   		$percent = (int) ($show_height/($origin_height/100));
   		$image['width'] = (int) (($origin_width/100)*$percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
-  	  																												$image['width'], $show_height, $origin_width, $origin_height, $origin_filemtime))) return false;
+  	  																												$image['width'], $show_height, $origin_width, $origin_height, $origin_filemtime, $classes))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
   	  return true;
   	}
@@ -475,7 +529,7 @@ class processContent {
   		$percent = (int) ($show_width/($origin_width/100));
   		$image['height'] = (int) (($origin_height/100)*$percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
-  	  																												$show_width, $image['height'], $origin_width, $origin_height, $origin_filemtime))) return false;
+  	  																												$show_width, $image['height'], $origin_width, $origin_height, $origin_filemtime, $classes))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
   	  return true;
   	}
@@ -493,7 +547,7 @@ class processContent {
   		$image['height'] = (int) (($origin_height/100)*$h_percent);
   		$image['width'] = (int) (($origin_width/100)*$w_percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
-  	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime))) return false;
+  	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime, $classes))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
   	  return true;		
   	}
@@ -504,7 +558,7 @@ class processContent {
   		$image['width'] = (int) (($origin_width/100)*$percent);
   		$image['height'] = (int) (($origin_height/100)*$percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
-  	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime))) return false;
+  	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime, $classes))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
   	  return true;
   	}
@@ -515,7 +569,7 @@ class processContent {
   		$image['width'] = (int) (($origin_width/100)*$percent);
   		$image['height'] = (int) (($origin_height/100)*$percent);
   		if (false === ($tweaked_file = $this->createTweakedFile($path_parts['filename'], $path_parts['extension'], str_replace(WB_URL, WB_PATH, $image['src']), 
-  	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime))) return false;
+  	  																												$image['width'], $image['height'], $origin_width, $origin_height, $origin_filemtime, $classes))) return false;
   	  $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
   	  return true;
   	}
