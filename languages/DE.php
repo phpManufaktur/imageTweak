@@ -107,7 +107,7 @@ define('tweak_label_cfg_jpeg_quality',						'JPEG Qualität');
 define('tweak_label_cfg_limit_log_entries',				'LOG Einträge begrenzen');
 define('tweak_label_cfg_memory_buffer',						'Memory Buffer');
 define('tweak_label_cfg_memory_limit',						'Memory Limit');
-define('tweak_label_cfg_set_title_tag',						'TITLE Attribut setzen');
+define('tweak_label_cfg_set_title_tag',						'TITLE Attribut setzen'); 
 
 define('tweak_log_mkdir',													'Das Verzeichnis %s wurde angelegt.');
 define('tweak_log_initialize_cfg',								'Die Konfiguration für imageTweak wurde neu initialisiert.');

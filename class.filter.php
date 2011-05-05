@@ -384,7 +384,7 @@ class processContent {
     		// change image size and crop image
     		$faktor = $zoom/100;
     		$zoom_width = (int) ($origin_width*$faktor);
-    		$zoom_height = (int) ($origin_height*$faktor); echo "$origin_width - $zoom_width : $origin_height - $zoom_height";
+    		$zoom_height = (int) ($origin_height*$faktor); 
     		imagecopyresampled($new_image, $origin_image, 0, 0, $x_pos, $y_pos, $new_width, $new_height, $zoom_width, $zoom_height);
     	}
     	else {
