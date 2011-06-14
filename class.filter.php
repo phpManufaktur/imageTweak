@@ -457,6 +457,7 @@ class processContent {
   		$style_array = explode(';', $image['style']);
   		foreach ($style_array as $style) {
   			if (empty($style)) continue;
+  			if (strpos($style, ':') == false) continue;
   			list($name, $value) = explode(':', $style);
   			$name = strtolower(trim($name));
   			if (($name == 'width') || ($name == 'height')) {
