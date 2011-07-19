@@ -5,9 +5,9 @@
  * 
  * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
  * @link http://phpmanufaktur.de
- * @copyright 2008 - 2011
+ * @copyright 2011
  * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
+ * @version $Id: index.php 2 2011-02-18 20:03:21Z phpmanufaktur $
  * 
  * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
  */
@@ -29,24 +29,5 @@ if (defined('WB_PATH')) {
 	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']));
 }
 // end include LEPTON class.secure.php
-
-require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tweak.php');
-
-global $admin;
-
-$error = '';
-
-// generally initialize the imageTweak Configuration
-$tweakCfg = new dbImageTweakCfg();
-if ($tweakCfg->isError()) $error .= sprintf('Initialize dbImageTweakCfg: %s', $tweakCfg->getError());
-
-// 0.44 - class.tools.php is no longer used
-if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tools.php')) {
-	unlink(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tools.php');
-}
-
-if (!empty($error)) {
-	$admin->print_error($error);
-}
 
 ?>

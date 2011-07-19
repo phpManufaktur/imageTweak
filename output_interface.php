@@ -1,5 +1,4 @@
 <?php
-
 /**
  * imageTweak
  * 
@@ -8,13 +7,11 @@
  * @copyright 2011
  * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
  * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
+// include class.secure.php to protect this file and the whole CMS!
 if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
+	include(WB_PATH.'/framework/class.secure.php'); 
 } elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
 	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
 } else {
@@ -26,8 +23,16 @@ if (defined('WB_PATH')) {
 			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
 		} 
 	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']));
+	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']));
 }
-// end include LEPTON class.secure.php
+// end include class.secure.php
+
+require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/class.filter.php');
+
+if (!function_exists('image_tweak_output_filter')) {
+	function image_tweak_output_filter($output) {
+		return tweakImages($output);
+	}
+}
 
 ?>

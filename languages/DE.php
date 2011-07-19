@@ -21,6 +21,24 @@
  * Translated to German (Original Source) by Ralf Hertsch  
  */
 
+// try to include LEPTON class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {	
+	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
+} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
+	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
+} else {
+	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
+	$inc = false;
+	foreach ($subs as $sub) {
+		if (empty($sub)) continue; $dir .= '/'.$sub;
+		if (file_exists($dir.'/framework/class.secure.php')) { 
+			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
+		} 
+	}
+	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']));
+}
+// end include LEPTON class.secure.php
+
 // Module description
 $module_description = 'imageTweak optimiert Grafiken während der Ausgabe automatisch und beschleunigt die Anzeige der Website.';
 

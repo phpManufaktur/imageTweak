@@ -3,6 +3,10 @@ imageTweak
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
+Release 0.47
+2011-07-19
+Grant compatibillity for LEPTON CMS
+
 Release 0.46
 2011-04-20
 Added: CSS Crop function, additional Classes: top, bottom, left, right, zoom[]
