@@ -23,7 +23,7 @@ if (defined('WB_PATH')) {
 			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
 		} 
 	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']));
+	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
 }
 // end include class.secure.php
 
