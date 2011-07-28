@@ -434,9 +434,11 @@ class processContent {
     endswitch;
     if (!chmod($new_file, 0755)) {
     	$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_chmod, basename($new_file))));
+    	return false;
     }
     if (($origin_filemtime !== false) && (touch($new_file, $origin_filemtime) === false)) {
     	$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_touch, basename($new_file))));
+    	return false;
     }
     return $new_file;	  
 	} // createTweakedFile()
@@ -453,6 +455,7 @@ class processContent {
   	// pruefen, ob es sich um einen gueltigen Dateityp handelt
   	$path_parts = pathinfo($img_path);
   	// strtolower extension
+  	if (!isset($path_parts['extension'])) return false;
   	$path_parts['extension'] = strtolower($path_parts['extension']);
   	// ungueltige Dateinendung?
   	if (!in_array($path_parts['extension'], $this->settings[self::cfgExtensions])) return false;

@@ -3,6 +3,10 @@ imageTweak
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
+Release 0.48
+
+Fixed: catch error if image url is invalid
+
 Release 0.47
 2011-07-19
 Grant compatibillity for LEPTON CMS
