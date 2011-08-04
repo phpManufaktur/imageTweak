@@ -4,8 +4,9 @@ Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
 Release 0.48
-
+2011-08-04
 Fixed: catch error if image url is invalid
+Fixed: UTF-8 problem with the DE language file
 
 Release 0.47
 2011-07-19
