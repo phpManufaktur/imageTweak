@@ -313,7 +313,14 @@ class processContent {
 							// ggf. Fancybox setzen
 							if (in_array($this->settings[self::cfgClassFancybox], $classes)) { 
 								$class = (!empty($this->settings[self::cfgFancyboxGrp])) ? sprintf(' class="%s"', $this->settings[self::cfgFancyboxGrp]) : '';
-								$new_tag = sprintf('<a%s href="%s" rel="%s">%s</a>', $class, $org_src, $this->settings[self::cfgFancyboxRel], $new_tag);
+								$title = (!empty($img['title'])) ? sprintf(' title="%s"', $img['title']) : '';
+								$new_tag = sprintf('<a%s href="%s" rel="%s"%s>%s</a>', $class, $org_src, $this->settings[self::cfgFancyboxRel], $title, $new_tag);
+							}
+							elseif (in_array('tweak-gallery', $classes)) {
+								$class = (!empty($this->settings[self::cfgFancyboxGrp])) ? sprintf(' class="%s"', $this->settings[self::cfgFancyboxGrp]) : '';
+								$title = (!empty($img['title'])) ? sprintf(' title="%s"', $img['title']) : '';
+								$new_tag = sprintf(	'<div class="tweak-gallery-item-image"><a%s href="%s" rel="%s"%s>%s</a><div class="tweak-gallery-item-title">%s</div></div>',
+																		$class, $org_src, $this->settings[self::cfgFancyboxRel], $title, $new_tag, $img['title']);
 							}
 							$this->content = str_replace($img_tag, $new_tag, $this->content);
 						}

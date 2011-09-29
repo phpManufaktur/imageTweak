@@ -66,6 +66,7 @@ define ('tweak_cfg_decimal_separator', '.');
 define ('tweak_desc_cfg_check_alt_tags','Check if ALT attributes are set (1 = yes, 0 = No ).');
 define ('tweak_desc_cfg_class_fancybox', 'The CSS class prompted to set a LINK for Fancybox. The preview (thumbnail) is optimized, which links to display the original Fancybox image. Fancybox must be installed for this purpose.');
 define ('tweak_desc_cfg_class_no_tweak', 'CSS class to tell ImageTweak to ignore the picture, and no optimization is done.');
+define('tweak_desc_cfg_class_tweak_gallery',			'CSS class which forces imageTweak to prompt the title of the image below it (Gallery mode)');
 define ('tweak_desc_cfg_default_alt_tag', 'Alternative text to be set if the ALT attribute is missing or empty.');
 define ('tweak_desc_cfg_exec', 'Do you want to run ImageTweak (0 = no, 1 = YES)');
 define ('tweak_desc_cfg_extensions','File types that will be optimized by ImageTweak.');
@@ -113,6 +114,7 @@ define ('tweak_intro_log_no_entries', '<p>There are no LOG entries available.</ 
 define ('tweak_label_cfg_check_alt_tags', 'ALT attributes check');
 define ('tweak_label_cfg_class_fancybox', 'Fancybox call');
 define ('tweak_label_cfg_class_no_tweak', 'Image Ignore');
+define('tweak_label_cfg_class_tweak_gallery',			'Tweak Gallery');
 define ('tweak_label_cfg_default_alt_tag', 'ALT default');
 define ('tweak_label_cfg_exec', 'Run ImageTweak');
 define ('tweak_label_cfg_extensions', 'File Types');

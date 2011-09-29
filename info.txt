@@ -3,6 +3,11 @@ imageTweak
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
+Release 0.50
+2011-xx-xx
+Added: gallery mode with class 'tweak-gallery' to force imageTweak to prompt a 
+       title below the image
+
 Release 0.49
 2011-09-13
 Added: english language file EN.php - many thanks to sky writer for translation!
@@ -32,14 +37,16 @@ Removed: class.tools.php is no longer needed
 
 Release 0.43
 2011-02-19
-Changed: improved memory handling to avoid fatal errors if memory limit is too small
+Changed: improved memory handling to avoid fatal errors if memory limit is 
+         too small
 Added: skip zoomed images
 
 Release 0.42
 2011-02-19
 Added: class and parameters for automatically executing Fancybox
 Added: option for increasing memory limit
-Added: handling if CSS is used within <img /> tag for setting dimensions instead of height and width attributes
+Added: handling if CSS is used within <img /> tag for setting dimensions 
+       instead of height and width attributes
 
 Release 0.41
 2011-02-18
