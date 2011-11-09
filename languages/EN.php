@@ -88,9 +88,12 @@ define ('tweak_error_memory_max', 'Memory is not currently available for ImageTw
 define ('tweak_error_unlink', 'File %s could not be deleted');
 define ('tweak_error_chmod', 'The permissions for the file %s could not be changed');
 define ('tweak_error_touch', 'The modification time for file %s could not be set');
+define('tweak_error_param_folder_invalid', '<p>Das Verzeichnis <b>/MEDIA/%s</b> wurde nicht gefunden!</p>');
+define('tweak_error_param_folder_missing', '<p>Bitte geben Sie mit dem Parameter <b>folder</b> an, welches /MEDIA Verzeichnis die imageTweakGallery verwenden soll!</p>');
 define ('tweak_error_patch_failed', 'The automatic adjustment of the output filter failed. Please consult the online documentation (http://phpManufaktur.de/image_tweak) about the possibility of manual adjustment.');
 define ('tweak_error_patch_failed_unknown', 'The output filter was not found. The installation could not be completed. Please contact http://phpManufaktur.de.');
 define ('tweak_error_patch_uninstall', 'The output filter could not be written back to the original state. You need to install the filter output again.');
+define('tweak_error_reading_file', '<p>Fehler beim Einlesen der Datei <b>%s</b>.</p>');
 define ('tweak_error_set_memory_limit', 'Memory_limit could not be set to %d MB.');
 define ('tweak_error_skip_initialize', 'The page with ID %d was skipped because ImageTweak had to be re-initialized.');
 

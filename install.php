@@ -32,6 +32,15 @@ if (defined('WB_PATH')) {
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tweak.php');
 
+// include GENERAL language file
+if(!file_exists(WB_PATH .'/modules/kit_tools/languages/' . LANGUAGE .'.php')) {
+    // default language is DE !!!
+    require_once(WB_PATH .'/modules/kit_tools/languages/DE.php');
+}
+else {
+    require_once(WB_PATH .'/modules/kit_tools/languages/' . LANGUAGE .'.php');
+}
+
 // Sprachdateien einbinden
 if(!file_exists(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php')) {
 	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/DE.php'); 
@@ -39,6 +48,9 @@ if(!file_exists(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .
 else {
 	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php'); 
 }
+
+// Installation fuer das Droplet
+require_once(WB_PATH.'/modules/kit_tools/class.droplets.php');
 
 global $admin;
 	
@@ -137,6 +149,20 @@ else {
 		echo '<script language="javascript">alert ("'.$message.'");</script>';
 	}
 } // WebsiteBaker		
+
+// Install Droplets
+$droplets = new checkDroplets();
+$droplets->droplet_path = WB_PATH.'/modules/image_tweak/droplets/';
+
+if ($droplets->insertDropletsIntoTable()) {
+    $message .= sprintf(tool_msg_install_droplets_success, 'imageTweak');
+}
+else {
+    $message .= sprintf(tool_msg_install_droplets_failed, 'tsGallery', $droplets->getError());
+}
+if ($message != "") {
+    echo '<script language="javascript">alert ("'.$message.'");</script>';
+}
 
 // Prompt Errors
 if (!empty($error)) {

@@ -40,6 +40,8 @@ else {
 	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php'); 
 }
 
+require_once(WB_PATH.'/modules/kit_tools/class.droplets.php');
+
 $error = '';
 
 $dbCfg = new dbImageTweakCfg();
@@ -115,6 +117,16 @@ else {
 		}
 	}
 } // WebsiteBaker
+
+// remove Droplets
+$dbDroplets = new dbDroplets();
+$droplets = array('it_gallery');
+foreach ($droplets as $droplet) {
+    $where = array(dbDroplets::field_name => $droplet);
+    if (!$dbDroplets->sqlDeleteRecord($where)) {
+        $message = sprintf('[UPGRADE] Error uninstalling Droplet: %s', $dbDroplets->getError());
+    }
+}
 
 // Prompt Errors
 if (!empty($error)) {

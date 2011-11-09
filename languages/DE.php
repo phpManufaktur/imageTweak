@@ -88,9 +88,12 @@ define('tweak_error_memory_max',									'Der Speicher reicht imageTweak nicht a
 define('tweak_error_unlink',											'Die Datei %s konnte nicht gelöscht werden!');
 define('tweak_error_chmod',												'Die Zugriffsrechte für die Datei %s konnten nicht geändert werden!');
 define('tweak_error_touch',												'Die Modifikationszeit für die Datei %s konnte nicht gesetzt werden!');
+define('tweak_error_param_folder_invalid', '<p>Das Verzeichnis <b>/MEDIA/%s</b> wurde nicht gefunden!</p>');
+define('tweak_error_param_folder_missing', '<p>Bitte geben Sie mit dem Parameter <b>folder</b> an, welches /MEDIA Verzeichnis die imageTweakGallery verwenden soll!</p>');
 define('tweak_error_patch_failed',								'Die automatische Anpassung des Ausgabefilter ist fehlgeschlagen. Bitte informieren Sie sich in der online Dokumentation (http://phpManufaktur.de/image_tweak) Ã¼ber die MÃ¶glichkeite der manuellen Anpassung.');
 define('tweak_error_patch_failed_unknown',				'Der Ausgabefilter wurde nicht gefunden, die Installation konnte nicht abgeschlossen werden. Bitte nehmen Sie Kontakt mit der http://phpManufaktur.de auf!');
 define('tweak_error_patch_uninstall',							'Der Ausgabefilter konnte nicht wieder in den ursprünglichen Zustand zurückgeschrieben werden. Installieren Sie bei Bedarf den Ausgabefilter erneut.');
+define('tweak_error_reading_file', '<p>Fehler beim Einlesen der Datei <b>%s</b>.</p>');
 define('tweak_error_set_memory_limit',						'memory_limit konnte nicht auf %dM gesetzt werden.');
 define('tweak_error_skip_initialize',							'Die Seite mit der ID %d wurde übersprungen, da imageTweak neu initialisiert werden musste.');
 

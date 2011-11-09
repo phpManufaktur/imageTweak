@@ -4,9 +4,10 @@ Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
 Release 0.50
-2011-xx-xx
+2011-11-09
 Added: gallery mode with class 'tweak-gallery' to force imageTweak to prompt a 
-       title below the image
+  title below the image
+Added: droplet [[it_gallery]] enable to create a folder gallery
 
 Release 0.49
 2011-09-13

@@ -313,7 +313,7 @@ class processContent {
 							// ggf. Fancybox setzen
 							if (in_array($this->settings[self::cfgClassFancybox], $classes)) { 
 								$class = (!empty($this->settings[self::cfgFancyboxGrp])) ? sprintf(' class="%s"', $this->settings[self::cfgFancyboxGrp]) : '';
-								$title = (!empty($img['title'])) ? sprintf(' title="%s"', $img['title']) : '';
+								$title = (!empty($img['title'])) ? sprintf(' title="%s"', $img['title']) : ''; 
 								$new_tag = sprintf('<a%s href="%s" rel="%s"%s>%s</a>', $class, $org_src, $this->settings[self::cfgFancyboxRel], $title, $new_tag);
 							}
 							elseif (in_array('tweak-gallery', $classes)) {

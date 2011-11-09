@@ -33,7 +33,7 @@ if (defined('WB_PATH')) {
 $module_directory     = 'image_tweak';
 $module_name          = 'imageTweak';
 $module_function      = 'tool';
-$module_version       = '0.49';
+$module_version       = '0.50';
 $module_status        = 'Stable';
 $module_platform      = '2.8'; 
 $module_author        = 'Ralf Hertsch, Berlin (Germany)';
