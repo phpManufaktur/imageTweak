@@ -1,0 +1,43 @@
+{*
+ * imageTweak
+ *
+ * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * @link http://phpmanufaktur.de
+ * @copyright 2011
+ * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
+ * @version $Id$
+ *
+ * Please consult the Dwoo Documentation & WIKI to get further informations 
+ * and hints for the usage of the Dwoo template engine.
+ *
+ * @link http://wiki.dwoo.org/
+ *
+ * Use {dump()} to get a list of all in this template available variables!
+ *}
+{if $is_error}
+  <div class="error">
+    {$error}
+  </div>
+{else}
+  <div class="it_gallery">
+    {* get first image of the gallery really prompt it as first image! *}
+    {foreach $gallery image}
+      {if $image.is_first == 1}
+        <a href="{$image.zoom.url}" title="{$image.title}" rel="fancybox"><img src="{$image.preview.url}" width="{$image.preview.width}" height="{$image.preview.height}" alt="{$image.title}" /></a>
+      {/if}
+    {/foreach}
+    {foreach $gallery image}
+      {if $image.is_first == 0}
+        <a href="{$image.zoom.url}" title="{$image.title}" rel="fancybox"></a>
+      {/if}
+    {/foreach}
+  </div>
+{/if}
+<script>
+  if ( $('#fancybox:empty').length > 0 )
+{
+  // Is empty
+  alert ("emptY!!!!");
+}
+
+</script>

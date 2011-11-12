@@ -343,16 +343,20 @@ class imageTweakGallery {
         return $path;
     }
     
-    
+    /**
+     * Action handler of the class
+     * 
+     * @return string formatted gallery on success or error prompt
+     */
     public function action() {
         if (empty($this->params[self::PARAM_FOLDER])) {
-            $this->setError(tweak_error_param_folder_missing);
+            $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, tweak_error_param_folder_missing));
             return $this->show();
         }
         $images_path = WB_PATH.MEDIA_DIRECTORY.DIRECTORY_SEPARATOR.$this->params[self::PARAM_FOLDER];
         $images_path = $this->addSlash($images_path);
         if (!file_exists($images_path)) {
-            $this->setError(sprintf(tweak_error_param_folder_invalid, $this->params[self::PARAM_FOLDER]));
+            $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_param_folder_invalid, $this->params[self::PARAM_FOLDER])));
             return $this->show();
         }
         
@@ -385,10 +389,12 @@ class imageTweakGallery {
         $description = false;
         $description_array = array();
         $start_file = '';
+        $items = array();
+        
         if (file_exists($images_path.'images.lst')) {
             if (false === ($fa = file($images_path.'images.lst', FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES))) {
                 // error reading file
-                $this->setError(sprintf(tweak_error_reading_file, 'images.lst'));
+                $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_reading_file, 'images.lst')));
                 return $this->show();
             }
             foreach ($fa as $line) {
@@ -413,8 +419,8 @@ class imageTweakGallery {
                 $rewrite = false;
                 if (file_exists($temp_path_preview.$fileinfo->getBasename())) {
                     // compare size and date
-                    list($t_width, $t_height) = getimagesize($temp_path_preview.$fileinfo->getBasename());
-                    if ($t_width != $this->params[self::PARAM_WIDTH]) $rewrite = true; 
+                    list($previewWidth, $previewHeight) = getimagesize($temp_path_preview.$fileinfo->getBasename());
+                    if ($previewWidth != $this->params[self::PARAM_WIDTH]) $rewrite = true; 
                     if (filemtime($temp_path_preview.$fileinfo->getBasename()) != $fileinfo->getMTime()) $rewrite = true;
                 }
                 // create preview image
@@ -447,6 +453,7 @@ class imageTweakGallery {
                     }
                 }
                 // create zoom image
+                
                 if (!file_exists($temp_path_zoom.$fileinfo->getBasename()) || $rewrite) {
                     // create preview image
                     if ($width > self::ZOOM_MAX_WIDTH) {
@@ -475,29 +482,32 @@ class imageTweakGallery {
                         return $this->show();
                     }
                 }
-                if ($start && (empty($start_file) || ($fileinfo->getBasename() == $start_file))) {
-                    // this is the first image of the gallery
-                    $first = sprintf('<a class="%s" href="%s" rel="fancybox" title="%s"><img src="%s" width="%s" height="%s" alt="%s" /></a>',
-                            $this->params[self::PARAM_FOLDER],
-                            $temp_url_zoom.$fileinfo->getBasename(),
-                            isset($description_array[$fileinfo->getBasename()]) ? $description_array[$fileinfo->getBasename()] : '',
-                            $temp_url_preview.$fileinfo->getBasename(),
-                            $previewWidth,
-                            $previewHeight,
-                            '');
-                    $start = false;
-                }
                 else {
-                    $links .= sprintf('<a class="%s" href="%s" rel="fancybox" title="%s"></a>',
-                            $this->params[self::PARAM_FOLDER],
-                            $temp_url_zoom.$fileinfo->getBasename(),
-                            isset($description_array[$fileinfo->getBasename()]) ? $description_array[$fileinfo->getBasename()] : ''
-                            );
+                    // get width and height from zoom image
+                    list($zoomWidth, $zoomHeight) = getimagesize($temp_path_zoom.$fileinfo->getBasename());
                 }
+                
+                $items[] = array(
+                        'is_first' => ($start && (empty($start_file)) || ($fileinfo->getBasename() == $start_file)) ? 1 : 0,
+                        'class' => media_filename($this->params[self::PARAM_FOLDER]),
+                        'title' => isset($description_array[$fileinfo->getBasename()]) ? $description_array[$fileinfo->getBasename()] : '',
+                        'zoom' => array(
+                                'url' => $temp_url_zoom.$fileinfo->getBasename(),
+                                'width' => $zoomWidth,
+                                'height' => $zoomHeight
+                        ),
+                        'preview' => array(
+                                'url' => $temp_url_preview.$fileinfo->getBasename(),
+                                'width' => $previewWidth,
+                                'height' => $previewHeight
+                        )
+                );
+                // set start tag to false ...
+                if ($start && (empty($start_file))) $start = false;
             }
         }        
         
-        return $first.$links;
+        return $this->show($items);
     } // action()
     
     /**
@@ -507,12 +517,21 @@ class imageTweakGallery {
      *
      * @return STR dialog
      */
-    public function show($content='') {
-        $data = array(
-                'error' => ($this->isError()) ? 1 : 0,
-                'content' => ($this->isError()) ? $this->getError() : $content
-        );
-        return $this->getTemplate('frontend.body.lte', $data);
+    public function show($data=array()) {
+        if ($this->isError() || !is_array($data)) {
+            $data = array(
+                    'is_error' => 1,
+                    'error' => $this->getError()
+                    );
+        }
+        else {
+            $data = array(
+                    'is_error' => 0,
+                    'gallery' => $data
+                    );
+        }
+        // return the result
+        return $this->getTemplate('frontend.gallery.lte', $data);
     } // show_main()
     
     /**
