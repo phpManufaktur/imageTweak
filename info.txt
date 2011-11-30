@@ -3,6 +3,12 @@ imageTweak
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
+Release 0.51
+2011-11-15
+Fixed: problem with installation of the droplet
+Changed: bondage of jQuery, the droplet [[it_gallery]] can now automatically 
+  load the needed jQuery libraries
+
 Release 0.50
 2011-11-12
 Added: gallery mode with class 'tweak-gallery' to force imageTweak to prompt a 

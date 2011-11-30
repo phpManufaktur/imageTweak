@@ -12,23 +12,24 @@
  * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {    
+    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
 } else {
-	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
-	$inc = false;
-	foreach ($subs as $sub) {
-		if (empty($sub)) continue; $dir .= '/'.$sub;
-		if (file_exists($dir.'/framework/class.secure.php')) { 
-			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
-		} 
-	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    $oneback = "../";
+    $root = $oneback;
+    $level = 1;
+    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+        $root .= $oneback;
+        $level += 1;
+    }
+    if (file_exists($root.'/framework/class.secure.php')) { 
+        include($root.'/framework/class.secure.php'); 
+    } else {
+        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    }
 }
-// end include LEPTON class.secure.php
+// end include class.secure.php
 
 // include GENERAL language file
 if(!file_exists(WB_PATH .'/modules/kit_tools/languages/' . LANGUAGE .'.php')) {
@@ -70,13 +71,24 @@ $droplets = new checkDroplets();
 $droplets->droplet_path = WB_PATH.'/modules/image_tweak/droplets/';
 
 if ($droplets->insertDropletsIntoTable()) {
-    $message .= sprintf(tool_msg_install_droplets_success, 'imageTweak');
+    $message = sprintf(tool_msg_install_droplets_success, 'imageTweak');
 }
 else {
-    $message .= sprintf(tool_msg_install_droplets_failed, 'tsGallery', $droplets->getError());
+    $message = sprintf(tool_msg_install_droplets_failed, 'tsGallery', $droplets->getError());
 }
 if ($message != "") {
     echo '<script language="javascript">alert ("'.$message.'");</script>';
+}
+
+// delete no longer needed files
+$delete_files = array(
+        'class.tools.php',
+        'presets/fancybox.jquery'
+);
+foreach ($delete_files as $file) {
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/'.$file)) {
+        @unlink(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/'.$file);
+    }
 }
 
 
