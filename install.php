@@ -56,6 +56,7 @@ require_once(WB_PATH.'/modules/kit_tools/class.droplets.php');
 global $admin;
 	
 $error = '';
+$message = '';
 
 $dbCfg = new dbImageTweakCfg();
 if (!$dbCfg->sqlTableExists()) {
