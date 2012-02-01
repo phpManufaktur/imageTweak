@@ -8,6 +8,7 @@ Release 0.51
 Fixed: problem with installation of the droplet
 Changed: bondage of jQuery, the droplet [[it_gallery]] can now automatically 
   load the needed jQuery libraries
+Fixed: precheck.php does not check for kitTools
 
 Release 0.50
 2011-11-12
