@@ -2,19 +2,19 @@
 
 /**
  * imageTweak
- * 
+ *
  * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
  * @link http://phpmanufaktur.de
  * @copyright 2008 - 2011
  * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
  * @version $Id$
- * 
+ *
  * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
+if (defined('WB_PATH')) {
+    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
 } else {
     $oneback = "../";
     $root = $oneback;
@@ -23,8 +23,8 @@ if (defined('WB_PATH')) {
         $root .= $oneback;
         $level += 1;
     }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
+    if (file_exists($root.'/framework/class.secure.php')) {
+        include($root.'/framework/class.secure.php');
     } else {
         trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
     }
@@ -33,10 +33,10 @@ if (defined('WB_PATH')) {
 
 // Sprachdateien einbinden
 if(!file_exists(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php')) {
-	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/DE.php'); 
+	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/DE.php');
 }
 else {
-	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php'); 
+	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php');
 }
 
 // dbConnect_LE einbinden
@@ -44,7 +44,7 @@ if (!class_exists('dbConnectLE')) require_once(WB_PATH.'/modules/dbconnect_le/in
 
 
 class dbImageTweakCfg extends dbConnectLE {
-	
+
 	const field_id						= 'cfg_id';
 	const field_name					= 'cfg_name';
 	const field_type					= 'cfg_type';
@@ -54,10 +54,10 @@ class dbImageTweakCfg extends dbConnectLE {
 	const field_status				= 'cfg_status';
 	const field_update_by			= 'cfg_update_by';
 	const field_update_when		= 'cfg_update_when';
-	
+
 	const status_active				= 1;
 	const status_deleted			= 0;
-	
+
 	const type_undefined			= 0;
 	const type_array					= 7;
   const type_boolean				= 1;
@@ -67,7 +67,7 @@ class dbImageTweakCfg extends dbConnectLE {
   const type_path						= 5;
   const type_string					= 6;
   const type_url						= 8;
-  
+
   public $type_array = array(
   	self::type_undefined		=> '-UNDEFINED-',
   	self::type_array				=> 'ARRAY',
@@ -79,10 +79,10 @@ class dbImageTweakCfg extends dbConnectLE {
   	self::type_string				=> 'STRING',
   	self::type_url					=> 'URL'
   );
-  
+
   private $createTables 		= false;
   private $message					= '';
-    
+
   const cfgTweakExec				= 'cfgTweakExec';
   const cfgTweakImageDir		= 'cfgTweakImageDir';
   const cfgClassNoTweak			= 'cfgClassNoTweak';
@@ -100,7 +100,7 @@ class dbImageTweakCfg extends dbConnectLE {
   const cfgMemoryBuffer			= 'cfgMemoryBuffer';
   const cfgJPEGquality			= 'cfgJPEGquality';
   const cfgClassTweakGallery = 'cfgClassTweakGallery';
-  
+
   public $config_array = array(
   	array('tweak_label_cfg_exec', self::cfgTweakExec, self::type_boolean, '1', 'tweak_desc_cfg_exec'),
   	array('tweak_label_cfg_image_dir', self::cfgTweakImageDir, self::type_string, 'tweaked', 'tweak_desc_cfg_image_dir'),
@@ -118,9 +118,9 @@ class dbImageTweakCfg extends dbConnectLE {
   	array('tweak_label_cfg_fancybox_rel', self::cfgFancyboxRel, self::type_string, 'fancybox', 'tweak_desc_cfg_fancybox_rel'),
   	array('tweak_label_cfg_memory_buffer', self::cfgMemoryBuffer, self::type_integer, '4', 'tweak_desc_cfg_memory_buffer'),
   	array('tweak_label_cfg_jpeg_quality', self::cfgJPEGquality, self::type_integer, '90', 'tweak_desc_cfg_jpeg_quality'),
-  	array('tweak_label_cfg_class_tweak_gallery', self::cfgClassTweakGallery, self::type_string, 'tweak-gallery', 'tweak_desc_cfg_class_tweak_gallery')  	   
-  );  
-  
+  	array('tweak_label_cfg_class_tweak_gallery', self::cfgClassTweakGallery, self::type_string, 'tweak-gallery', 'tweak_desc_cfg_class_tweak_gallery')
+  );
+
   public function __construct($createTables = false) {
   	$this->createTables = $createTables;
   	parent::__construct();
@@ -150,14 +150,14 @@ class dbImageTweakCfg extends dbConnectLE {
   		$this->checkConfig();
   	}
   } // __construct()
-  
+
   public function setMessage($message) {
     $this->message = $message;
   } // setMessage()
 
   /**
     * Get Message from $this->message;
-    * 
+    *
     * @return STR $this->message
     */
   public function getMessage() {
@@ -166,21 +166,21 @@ class dbImageTweakCfg extends dbConnectLE {
 
   /**
     * Check if $this->message is empty
-    * 
+    *
     * @return BOOL
     */
   public function isMessage() {
     return (bool) !empty($this->message);
   } // isMessage
-  
+
   /**
    * Aktualisiert den Wert $new_value des Datensatz $name
-   * 
+   *
    * @param $new_value STR - Wert, der uebernommen werden soll
    * @param $id INT - ID des Datensatz, dessen Wert aktualisiert werden soll
-   * 
+   *
    * @return BOOL Ergebnis
-   * 
+   *
    */
   public function setValueByName($new_value, $name) {
   	$where = array();
@@ -196,7 +196,7 @@ class dbImageTweakCfg extends dbConnectLE {
   	}
   	return $this->setValue($new_value, $config[0][self::field_id]);
   } // setValueByName()
-  
+
   /**
    * Haengt einen Slash an das Ende des uebergebenen Strings
    * wenn das letzte Zeichen noch kein Slash ist
@@ -206,9 +206,9 @@ class dbImageTweakCfg extends dbConnectLE {
    */
   public function addSlash($path) {
   	$path = substr($path, strlen($path)-1, 1) == "/" ? $path : $path."/";
-  	return $path;  
+  	return $path;
   }
-  
+
   /**
    * Wandelt einen String in einen Float Wert um.
    * Geht davon aus, dass Dezimalzahlen mit ',' und nicht mit '.'
@@ -230,7 +230,7 @@ class dbImageTweakCfg extends dbConnectLE {
 		$int = intval($string);
 		return $int;
   }
-  
+
 	/**
 	 * Ueberprueft die uebergebene E-Mail Adresse auf logische Gueltigkeit
 	 *
@@ -245,13 +245,13 @@ class dbImageTweakCfg extends dbConnectLE {
 		else {
 			return false; }
 	}
-  
+
   /**
    * Aktualisiert den Wert $new_value des Datensatz $id
-   * 
+   *
    * @param $new_value STR - Wert, der uebernommen werden soll
    * @param $id INT - ID des Datensatz, dessen Wert aktualisiert werden soll
-   * 
+   *
    * @return BOOL Ergebnis
    */
   public function setValue($new_value, $id) {
@@ -276,7 +276,7 @@ class dbImageTweakCfg extends dbConnectLE {
   		foreach ($worker as $item) {
   			$data[] = trim($item);
   		};
-  		$value = implode(",", $data);  			
+  		$value = implode(",", $data);
   		break;
   	case self::type_boolean:
   		$value = (bool) $new_value;
@@ -288,7 +288,7 @@ class dbImageTweakCfg extends dbConnectLE {
   		}
   		else {
   			$this->setMessage(sprintf(tweak_msg_invalid_email, $new_value));
-  			return false;			
+  			return false;
   		}
   		break;
   	case self::type_float:
@@ -317,12 +317,12 @@ class dbImageTweakCfg extends dbConnectLE {
   	}
   	return true;
   } // setValue()
-  
+
   /**
    * Gibt den angeforderten Wert zurueck
-   * 
-   * @param $name - Bezeichner 
-   * 
+   *
+   * @param $name - Bezeichner
+   *
    * @return WERT entsprechend des TYP
    */
   public function getValue($name) {
@@ -364,7 +364,7 @@ class dbImageTweakCfg extends dbConnectLE {
   	endswitch;
   	return $result;
   } // getValue()
-  
+
   public function checkConfig() {
   	foreach ($this->config_array as $item) {
   		$where = array();
@@ -392,31 +392,31 @@ class dbImageTweakCfg extends dbConnectLE {
   	}
   	return true;
   }
-	  
+
 } // class dbImageTweakCfg
 
 class dbImageTweakLog extends dbConnectLE {
-	
+
 	const field_id					= 'log_id';
 	const field_category		= 'log_category';
 	const field_page_id			= 'log_page_id';
 	const field_text				= 'log_text';
 	const field_timestamp		= 'log_timestamp';
-	
+
 	const category_info			= 'info';
 	const category_warning	= 'warning';
 	const category_error		= 'error';
 	const category_hint			= 'hint';
-	
+
 	public $category_array = array(
 		self::category_error			=> tweak_category_error,
 		self::category_hint				=> tweak_category_hint,
 		self::category_info				=> tweak_category_info,
 		self::category_warning		=> tweak_category_warning
 	);
-	
+
 	private $createTables 	= false;
-	
+
 	public function __construct($createTables = false) {
   	$this->createTables = $createTables;
   	parent::__construct();
@@ -435,6 +435,6 @@ class dbImageTweakLog extends dbConnectLE {
   			}
   		}
   	}
-  } // __construct()  
-	
+  } // __construct()
+
 } // class dbImageTweakLog
