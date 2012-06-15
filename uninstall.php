@@ -2,32 +2,32 @@
 
 /**
  * imageTweak
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2008 - 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2008-2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
+}
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
 }
 // end include class.secure.php
 
@@ -35,10 +35,10 @@ require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.tweak.php')
 
 // Sprachdateien einbinden
 if(!file_exists(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php')) {
-	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/DE.php'); 
+	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/DE.php');
 }
 else {
-	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php'); 
+	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php');
 }
 
 require_once(WB_PATH.'/modules/kit_tools/class.droplets.php');
@@ -48,14 +48,14 @@ $error = '';
 $dbCfg = new dbImageTweakCfg();
 if ($dbCfg->sqlTableExists()) {
 	if (!$dbCfg->sqlDeleteTable()) {
-		$error .= sprintf('[UNINSTALL %s] %s', $dbCfg->getTableName(), $dbCfg->getError());		
+		$error .= sprintf('[UNINSTALL %s] %s', $dbCfg->getTableName(), $dbCfg->getError());
 	}
 }
 
 $dbLog = new dbImageTweakLog();
 if ($dbLog->sqlTableExists()) {
 	if (!$dbLog->sqlDeleteTable()) {
-		$error .= sprintf('[UNINSTALL %s] %s', $dbLog->getTableName(), $dbLog->getError());		
+		$error .= sprintf('[UNINSTALL %s] %s', $dbLog->getTableName(), $dbLog->getError());
 	}
 }
 
@@ -72,7 +72,7 @@ if (defined('LEPTON_VERSION')) {
 else {
 	// Try to unpatch output filter of WebsiteBaker
 	function isPatched($filename) {
-		if (file_exists($filename)) {	
+		if (file_exists($filename)) {
 			$lines = file($filename);
 			foreach ($lines as $line) {
 				if (strpos($line , "tweakImages" ) > 0)
@@ -82,7 +82,7 @@ else {
 		}
 		return false;
 	} // isPatched()
-	
+
 	function unPatch() {
 		$original = WB_PATH .'/modules/output_filter/filter-routines.php';
 		$tmp 			= WB_PATH .'/modules/output_filter/filter-routines.backup.php';
@@ -95,22 +95,22 @@ else {
 			if (rename($backup, $original)) {
 				unlink($tmp);
 				return true;
-			} 
-			else { 
+			}
+			else {
 				return false;
 			}
-		} 
+		}
 		else {
 			return false;
 		}
 	} // unPatch()
-	
+
 	// Try to remove hook from output filter
 	if (file_exists(WB_PATH .'/modules/output_filter/filter-routines.php')) {
 		if (isPatched(WB_PATH .'/modules/output_filter/filter-routines.php')) {
 			if (!unPatch()) {
 				$message = tweak_error_patch_uninstall;
-			} 
+			}
 			else {
 				$message = tweak_msg_patch_uninstall_success;
 			}

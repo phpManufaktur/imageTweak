@@ -2,43 +2,39 @@
 
 /**
  * imageTweak
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2008 - 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
- * 
- * IMPORTANT NOTE:
- * 
- * If you are editing this file or creating a new language file
- * you must ensure that you SAVE THIS FILE UTF-8 ENCODED.
- * Otherwise all special chars will be destroyed and displayed improper!
- * It is NOT NECESSARY to mask special chars as HTML entities!
- * 
- * Translated to German (Original Source) by Ralf Hertsch  
+ * @copyright 2008-2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
+}
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
 }
 // end include class.secure.php
+
+if ('á' != "\xc3\xa1") {
+  // important: language files must be saved as UTF-8 (without BOM)
+  trigger_error('The language file <b>'.basename(__FILE__).'</b> is damaged, it must be saved <b>UTF-8</b> encoded!', E_USER_ERROR);
+}
 
 // Module description
 $module_description = 'imageTweak optimiert Grafiken während der Ausgabe automatisch und beschleunigt die Anzeige der Website.';
@@ -131,19 +127,19 @@ define('tweak_label_cfg_jpeg_quality',						'JPEG Qualität');
 define('tweak_label_cfg_limit_log_entries',				'LOG Einträge begrenzen');
 define('tweak_label_cfg_memory_buffer',						'Memory Buffer');
 define('tweak_label_cfg_memory_limit',						'Memory Limit');
-define('tweak_label_cfg_set_title_tag',						'TITLE Attribut setzen'); 
+define('tweak_label_cfg_set_title_tag',						'TITLE Attribut setzen');
 
 define('tweak_log_mkdir',													'Das Verzeichnis %s wurde angelegt.');
 define('tweak_log_initialize_cfg',								'Die Konfiguration für imageTweak wurde neu initialisiert.');
 
-define('tweak_msg_already_patched',								'Der Ausgabefilter ist bereits angepasst, es wurden keine Ãnderungen vorgenommen. Bitte nutzen Sie die online Dokumentation (http://phpmanufaktur.de/image_tweak) um mehr Ã¼ber imageTweak zu erfahren!');
+define('tweak_msg_already_patched',								'Der Ausgabefilter ist bereits angepasst, es wurden keine Ãnderungen vorgenommen. Bitte nutzen Sie die online Dokumentation (http://phpmanufaktur.de/image_tweak) um mehr über imageTweak zu erfahren!');
 define('tweak_msg_cfg_add_exists',								'<p>Der Konfigurationsdatensatz mit dem Bezeichner <b>%s</b> existiert bereits und kann nicht noch einmal hinzugefügt werden!</p>');
 define('tweak_msg_cfg_add_incomplete',						'<p>Der neu hinzuzufügende Konfigurationsdatensatz ist unvollständig! Bitte prüfen Sie Ihre Angaben!</p>');
 define('tweak_msg_cfg_add_success',								'<p>Der Konfigurationsdatensatz mit der <b>ID #%05d</b> und dem Bezeichner <b>%s</b> wurde hinzugefügt.</p>');
 define('tweak_msg_cfg_csv_export',								'<p>Die Konfigurationsdaten wurden als <b>%s</b> im /MEDIA Verzeichnis gesichert.</p>');
 define('tweak_msg_cfg_id_updated',								'<p>Der Konfigurationsdatensatz mit der <b>ID #%05d</b> und dem Bezeichner <b>%s</b> wurde aktualisiert.</p>');
 define('tweak_msg_invalid_email',									'Die E-Mail Adresse %s ist nicht gültig, bitte prüfen Sie Ihre Eingabe.');
-define('tweak_msg_patch_success',									'Der Ausgabefilter wurde erfolgreich angepasst, imageTweak ist jetzt einsatzbereit! Bitte nutzen Sie die online Dokumentation (http://phpmanufaktur.de/image_tweak) um mehr Ã¼ber imageTweak zu erfahren!');
+define('tweak_msg_patch_success',									'Der Ausgabefilter wurde erfolgreich angepasst, imageTweak ist jetzt einsatzbereit! Bitte nutzen Sie die online Dokumentation (http://phpmanufaktur.de/image_tweak) um mehr über imageTweak zu erfahren!');
 define('tweak_msg_patch_uninstall_success',				'Der Ausgabefilter wurde erfolgreich wieder in den ursprünglichen Zustand versetzt.');
 
 define('tweak_tab_info',													'imageTweak');

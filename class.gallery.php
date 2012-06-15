@@ -3,31 +3,31 @@
 /**
  * imageTweak
  *
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- *
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2008-2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
+}
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
 }
 // end include class.secure.php
 
@@ -159,25 +159,25 @@ class imageExtensionFilter extends FilterIterator {
 
 
 class imageTweakGallery {
-    
+
     const PARAM_CSS = 'css';
     const PARAM_FOLDER = 'folder';
     const PARAM_RECURSIVE = 'recursive';
     const PARAM_WIDTH = 'width';
-    
+
     private $params = array(
             self::PARAM_CSS => true,
             self::PARAM_FOLDER => '',
             self::PARAM_RECURSIVE => true,
             self::PARAM_WIDTH => 200
             );
-    
+
     const ZOOM_MAX_WIDTH = 800;
-    
+
     private $tempPath;
     private $tempURL;
     private $templatePath;
-    
+
     /**
      * classes added for compatibility to imageTweak
      * @see http://phpmanufaktur.de/image_tweak
@@ -189,7 +189,7 @@ class imageTweakGallery {
     const CLASS_RIGHT		= 'right';
     const CLASS_ZOOM	    = 'zoom';
     const CLASS_NO_CACHE	= 'no-cache';
-    
+
     public function __construct() {
         $this->setTemplatePath(WB_PATH.'/modules/image_tweak/htt/');
         $this->setTempPath(WB_PATH.'/temp/image_tweak/gallery/');
@@ -202,7 +202,7 @@ class imageTweakGallery {
                 $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_mkdir, $this->getTempPath(), $ex->getMessage())));
                 return false;
             }
-        }        
+        }
     } // __construct()
 
 	/**
@@ -252,7 +252,7 @@ class imageTweakGallery {
     {
         $this->tempPath = $tempPath;
     }
-    
+
     /**
      * Return the params available for the droplet [[kit_idea]] as array
      *
@@ -262,7 +262,7 @@ class imageTweakGallery {
     {
         return $this->params;
     } // getParams()
-    
+
     /**
      * Set the params for the droplet [[gallery]]
      *
@@ -274,7 +274,7 @@ class imageTweakGallery {
         $this->params[self::PARAM_FOLDER] = $this->removeLeadingSlash($this->params[self::PARAM_FOLDER]);
         return true;
     } // setParams()
-    
+
     /**
      * Set $this->error to $error
      *
@@ -283,7 +283,7 @@ class imageTweakGallery {
     public function setError($error) {
         $this->error = $error;
     } // setError()
-    
+
     /**
      * Get Error from $this->error;
      *
@@ -292,7 +292,7 @@ class imageTweakGallery {
     public function getError() {
         return $this->error;
     } // getError()
-    
+
     /**
      * Check if $this->error is empty
      *
@@ -301,7 +301,7 @@ class imageTweakGallery {
     public function isError() {
         return (bool) !empty($this->error);
     } // isError
-    
+
     /**
      * Process the desired template and returns the result as string
      *
@@ -319,7 +319,7 @@ class imageTweakGallery {
         }
         return $result;
     } // getTemplate()
-    
+
     /**
      * removes a leading backslash from $path
      *
@@ -330,7 +330,7 @@ class imageTweakGallery {
         $path = substr($path, 0, 1) == DIRECTORY_SEPARATOR ? substr($path, 1, strlen($path)) : $path;
         return $path;
     }
-    
+
     /**
      * Haengt einen Slash an das Ende des uebergebenen Strings
      * wenn das letzte Zeichen noch kein Slash ist
@@ -342,10 +342,10 @@ class imageTweakGallery {
         $path = substr($path, strlen($path)-1, 1) == DIRECTORY_SEPARATOR ? $path : $path.DIRECTORY_SEPARATOR;
         return $path;
     }
-    
+
     /**
      * Action handler of the class
-     * 
+     *
      * @return string formatted gallery on success or error prompt
      */
     public function action() {
@@ -359,7 +359,7 @@ class imageTweakGallery {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_param_folder_invalid, $this->params[self::PARAM_FOLDER])));
             return $this->show();
         }
-        
+
         $temp_path_preview = $this->getTempPath().$this->params[self::PARAM_FOLDER].'/preview/';
         $temp_url_preview = $this->getTempURL().$this->params[self::PARAM_FOLDER].'/preview/';
         if (!file_exists($temp_path_preview)) {
@@ -382,7 +382,7 @@ class imageTweakGallery {
                 return $this->show();
             }
         }
-        
+
         $first = '';
         $links = '';
         $start = true;
@@ -390,7 +390,7 @@ class imageTweakGallery {
         $description_array = array();
         $start_file = '';
         $items = array();
-        
+
         if (file_exists($images_path.'images.lst')) {
             if (false === ($fa = file($images_path.'images.lst', FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES))) {
                 // error reading file
@@ -408,7 +408,7 @@ class imageTweakGallery {
                     $description_array[trim($file)] = trim($title);
                     if ((strtolower(trim($start)) == 'true') && (file_exists($images_path.$file))) {
                         $start_file = trim($file);
-                    } 
+                    }
                 }
             }
         }
@@ -420,7 +420,7 @@ class imageTweakGallery {
                 if (file_exists($temp_path_preview.$fileinfo->getBasename())) {
                     // compare size and date
                     list($previewWidth, $previewHeight) = getimagesize($temp_path_preview.$fileinfo->getBasename());
-                    if ($previewWidth != $this->params[self::PARAM_WIDTH]) $rewrite = true; 
+                    if ($previewWidth != $this->params[self::PARAM_WIDTH]) $rewrite = true;
                     if (filemtime($temp_path_preview.$fileinfo->getBasename()) != $fileinfo->getMTime()) $rewrite = true;
                 }
                 // create preview image
@@ -453,7 +453,7 @@ class imageTweakGallery {
                     }
                 }
                 // create zoom image
-                
+
                 if (!file_exists($temp_path_zoom.$fileinfo->getBasename()) || $rewrite) {
                     // create preview image
                     if ($width > self::ZOOM_MAX_WIDTH) {
@@ -486,7 +486,7 @@ class imageTweakGallery {
                     // get width and height from zoom image
                     list($zoomWidth, $zoomHeight) = getimagesize($temp_path_zoom.$fileinfo->getBasename());
                 }
-                
+
                 $items[] = array(
                         'is_first' => ($start && (empty($start_file)) || ($fileinfo->getBasename() == $start_file)) ? 1 : 0,
                         'class' => media_filename($this->params[self::PARAM_FOLDER]),
@@ -505,11 +505,11 @@ class imageTweakGallery {
                 // set start tag to false ...
                 if ($start && (empty($start_file))) $start = false;
             }
-        }        
-        
+        }
+
         return $this->show($items);
     } // action()
-    
+
     /**
      * prompt the formatted result
      *
@@ -533,7 +533,7 @@ class imageTweakGallery {
         // return the result
         return $this->getTemplate('frontend.gallery.lte', $data);
     } // show_main()
-    
+
     /**
      * Master routine from imageTweak to create optimized images.
      * @see http://phpmanufaktur.de/image_tweak
@@ -637,7 +637,7 @@ class imageTweakGallery {
                 return false;
             }
         }
-        
+
         $new_file = $new_path.$filename;
         //Generate the file, and rename it to $newfilename
         switch ($extension):
@@ -666,5 +666,5 @@ class imageTweakGallery {
         }
         return $new_file;
     } // createTweakedFile()
-    
+
 } // class imageTweakGallery

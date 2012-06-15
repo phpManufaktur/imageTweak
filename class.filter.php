@@ -2,35 +2,34 @@
 
 /**
  * imageTweak
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2008 - 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2008-2012
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {    
-    if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php'); 
-} else {
-    $oneback = "../";
-    $root = $oneback;
-    $level = 1;
-    while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-        $root .= $oneback;
-        $level += 1;
-    }
-    if (file_exists($root.'/framework/class.secure.php')) { 
-        include($root.'/framework/class.secure.php'); 
-    } else {
-        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-    }
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
+}
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
 }
 // end include class.secure.php
-
 
 // Sprachdateien einbinden
 if (! file_exists(WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/languages/' . LANGUAGE . '.php')) {
@@ -48,7 +47,7 @@ function tweakImages($content) {
 
 
 class processContent {
-    
+
     private $content;
     private $tweak_path;
     private $tweak_url;
@@ -56,7 +55,7 @@ class processContent {
     private $error;
     private $memory_limit;
     private $memory_max;
-    
+
     const cfgTweakExec = 'cfgTweakExec';
     const cfgTweakImageDir = 'cfgTweakImageDir';
     const cfgClassNoTweak = 'cfgClassNoTweak';
@@ -72,25 +71,25 @@ class processContent {
     const cfgMemoryLimit = 'cfgMemoryLimit';
     const cfgMemoryBuffer = 'cfgMemoryBuffer';
     const cfgJPEGquality = 'cfgJPEGquality';
-    
+
     private $settings = array(
-            self::cfgTweakExec => 'cfgTweakExec', 
-            self::cfgTweakImageDir => 'cfgTweakImageDir', 
-            self::cfgClassNoTweak => 'cfgClassNoTweak', 
-            self::cfgExtensions => 'cfgExtensions', 
-            self::cfgCheckAltTags => 'cfgCheckAltTags', 
-            self::cfgDefaultAltTag => 'cfgDefaultAltTag', 
-            self::cfgSetTitleTag => 'cfgSetTitleTag', 
-            self::cfgIgnorePageIDs => 'cfgIgnorePageIDs', 
-            self::cfgIgnoreTopicIDs => 'cfgIgnoreTopicIDs', 
-            self::cfgClassFancybox => 'cfgClassFancybox', 
-            self::cfgFancyboxRel => 'cfgFancyboxRel', 
-            self::cfgFancyboxGrp => 'cfgFancyboxGrp', 
-            self::cfgMemoryLimit => 'cfgMemoryLimit', 
-            self::cfgMemoryBuffer => 'cfgMemoryBuffer', 
+            self::cfgTweakExec => 'cfgTweakExec',
+            self::cfgTweakImageDir => 'cfgTweakImageDir',
+            self::cfgClassNoTweak => 'cfgClassNoTweak',
+            self::cfgExtensions => 'cfgExtensions',
+            self::cfgCheckAltTags => 'cfgCheckAltTags',
+            self::cfgDefaultAltTag => 'cfgDefaultAltTag',
+            self::cfgSetTitleTag => 'cfgSetTitleTag',
+            self::cfgIgnorePageIDs => 'cfgIgnorePageIDs',
+            self::cfgIgnoreTopicIDs => 'cfgIgnoreTopicIDs',
+            self::cfgClassFancybox => 'cfgClassFancybox',
+            self::cfgFancyboxRel => 'cfgFancyboxRel',
+            self::cfgFancyboxGrp => 'cfgFancyboxGrp',
+            self::cfgMemoryLimit => 'cfgMemoryLimit',
+            self::cfgMemoryBuffer => 'cfgMemoryBuffer',
             self::cfgJPEGquality => 'cfgJPEGquality'
             );
-    
+
     const classCrop = 'crop';
     const classTop = 'top';
     const classBottom = 'bottom';
@@ -117,7 +116,7 @@ class processContent {
             }
             $this->tweak_url = str_replace(WB_PATH, WB_URL, $this->tweak_path);
             $this->media_url = WB_URL . MEDIA_DIRECTORY . '/';
-            
+
             // Memory Limit in MB aus der Konfiguration
             $limit = $this->settings[self::cfgMemoryLimit];
             // Umrechnung in Bytes
@@ -133,25 +132,25 @@ class processContent {
             $buffer = $this->settings[self::cfgMemoryBuffer] * 1024 * 1024;
             $this->memory_max = $this->memory_limit - $buffer;
         }
-    } // __construct() 
+    } // __construct()
 
-    
+
     public function setError($error) {
         $this->error = $error;
         $this->writeLog($error, 'error');
     } // setError()
 
-    
+
     public function getError() {
         return $this->error;
     } // getError()
 
-    
+
     public function isError() {
         return (bool) ! empty($this->error);
     } // isError()
 
-    
+
     private function writeLog($message, $message_type) {
         global $database;
         $SQL = sprintf("INSERT INTO %smod_img_tweak_log (log_category, log_page_id, log_text) VALUES ('%s','%s','%s')", TABLE_PREFIX, $message_type, PAGE_ID, $message);
@@ -159,7 +158,7 @@ class processContent {
         $database->query($SQL);
     } // writeLog()
 
-    
+
     private function initializeSettings() {
         require_once (WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/class.tweak.php');
         $tweakCfg = new dbImageTweakCfg();
@@ -230,17 +229,17 @@ class processContent {
         return true;
     } // getSettings()
 
-    
+
     public function setContent($content) {
         $this->content = $content;
     } // setContent()
 
-    
+
     public function getContent() {
         return $this->content;
     } // getContent()
 
-    
+
     public function iniReturnBytes($size_str) {
         switch (substr($size_str, - 1)) :
             case 'M':
@@ -258,13 +257,13 @@ class processContent {
         ;
     } // ini_return_bytes()
 
-    
+
     public function removeLeadingSlash($path) {
         $path = substr($path, 0, 1) == "/" ? substr($path, 1, strlen($path)) : $path;
         return $path;
     } // removeLeadingSlash()
 
-    
+
     public function addSlash($path) {
         $path = substr($path, strlen($path) - 1, 1) == "/" ? $path : $path . "/";
         return $path;
@@ -285,7 +284,7 @@ class processContent {
         return $this->checkContent();
     } // exec()
 
-    
+
     private function checkContent() {
         // optimierte Dateien auslesen
         $complete = scandir($this->tweak_path);
@@ -354,18 +353,18 @@ class processContent {
         return $this->content;
     } // checkContent()
 
-    
+
     private function createFileName($filename, $extension, $width, $height) {
         $filename = page_filename($filename);
         return sprintf('%s_%d_%d.%s', $filename, $width, $height, $extension);
-    } // 
+    } //
 
-    
+
     public function correctPathSeparator($path) {
         return (DIRECTORY_SEPARATOR == '/') ? trim(str_replace("\\", "/", $path)) : trim(str_replace("/", "\\", $path));
     } // correctSlashes()
 
-    
+
     private function createTweakedFile($filename, $extension, $file_path, $new_width, $new_height, $origin_width, $origin_height, $origin_filemtime, $classes = array()) {
         switch ($extension) :
             case 'gif':
@@ -383,10 +382,10 @@ class processContent {
                 return false;
         endswitch
         ;
-        
+
         // create new image of $new_width and $new_height
         $new_image = imagecreatetruecolor($new_width, $new_height);
-        // Check if this image is PNG or GIF, then set if Transparent  
+        // Check if this image is PNG or GIF, then set if Transparent
         if (($extension == 'gif') or ($extension == 'png')) {
             imagealphablending($new_image, false);
             imagesavealpha($new_image, true);
@@ -433,10 +432,10 @@ class processContent {
             // resample image
             imagecopyresampled($new_image, $origin_image, 0, 0, 0, 0, $new_width, $new_height, $origin_width, $origin_height);
         }
-        
+
         $new_file = $this->createFileName($filename, $extension, $new_width, $new_height);
         $new_file = $this->tweak_path . $new_file;
-        
+
         //Generate the file, and rename it to $newfilename
         switch ($extension) :
             case 'gif':
@@ -465,7 +464,7 @@ class processContent {
         return $new_file;
     } // createTweakedFile()
 
-    
+
     private function checkImage(&$image, &$classes = array()) {
         if (! isset($image['src'])) return false; // nothing to do...
         // CSS Klassen in ein Array einlesen
@@ -509,10 +508,10 @@ class processContent {
         }
         $show_width = (isset($image['width']) && ! empty($image['width'])) ? $image['width'] : 0;
         $show_height = (isset($image['height']) && ! empty($image['width'])) ? $image['height'] : 0;
-        // Originial Abmessungen ermitteln  	
+        // Originial Abmessungen ermitteln
         list ($origin_width, $origin_height) = getimagesize($img_path);
         $origin_filemtime = filemtime($img_path);
-        
+
         if ((is_numeric($show_height) && ($show_height > 0)) && (is_numeric($show_width) && ($show_width > 0))) {
             // Hoehe und Breite sind mit numerischen Werten gesetzt
             if (($origin_width == $show_width) && ($origin_height == $show_height)) {
@@ -602,7 +601,7 @@ class processContent {
             $image['src'] = str_replace(WB_PATH, WB_URL, $tweaked_file);
             return true;
         }
-        
+
         // keine Ahnung, was optimiert werden koennte...
         return false;
     } // checkImage()

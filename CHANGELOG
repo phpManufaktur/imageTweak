@@ -1,0 +1,74 @@
+### imageTweak
+
+(c) 2008 - 2012 by phpManufaktur
+Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
+http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
+
+Release 0.52 - 2012-06-15
+
+* removed check for WB Version
+* updated all header informations
+* changed license from GNU GPL to MIT License
+* added CHANGELOG
+* removed info.txt
+* added LICENSE
+* added README.md
+* adapted patching the output filter for WebsiteBaker 2.8.3
+* changed the compile path for the template engine to /temp/cache
+
+Release 0.51 - 2011-11-15
+
+* fixed problem with installation of the droplet
+* changed bondage of jQuery, the droplet [[it_gallery]] can now automatically 
+  load the needed jQuery libraries
+* fixed precheck.php does not check for kitTools
+
+Release 0.50 - 2011-11-12
+
+* added gallery mode with class 'tweak-gallery' to force imageTweak to prompt a 
+  title below the image
+* added droplet [[it_gallery]] enable to create a folder gallery
+
+Release 0.49 - 2011-09-13
+
+* added english language file EN.php - many thanks to sky writer for translation!
+
+Release 0.48 - 2011-08-04
+
+* fixed catch error if image url is invalid
+* fixed UTF-8 problem with the DE language file
+
+Release 0.47 - 2011-07-19
+
+* Grant compatibillity for LEPTON CMS
+
+Release 0.46 - 2011-04-20
+
+* added CSS Crop function, additional Classes: top, bottom, left, right, zoom[]
+* added Option to change the quality of JPEG images
+
+Release 0.45 - 2011-02-26
+
+* fixed Error calculating missing width or height value.
+
+Release 0.44 - 2011-02-20
+
+* changed improved data handling in filter routine for speed up scanning
+* removed class.tools.php is no longer needed
+
+Release 0.43 - 2011-02-19
+
+* changed improved memory handling to avoid fatal errors if memory limit is 
+  too small
+* added skip zoomed images
+
+Release 0.42 - 2011-02-19
+
+* added class and parameters for automatically executing Fancybox
+* added option for increasing memory limit
+* added handling if CSS is used within <img /> tag for setting dimensions 
+  instead of height and width attributes
+
+Release 0.41 - 2011-02-18
+
+* first Beta Release - imageTweak replaces imageOptimizer and dbImageOptimizer
