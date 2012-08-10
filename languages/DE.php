@@ -60,6 +60,7 @@ define('tweak_cfg_date_separator',								'.');
 define('tweak_cfg_date_time',											'd.m.Y - H:i');
 define('tweak_cfg_decimal_separator',							',');
 
+define('tweak_desc_cfg_change_url2wb_url',        'URLs, die auf die aktuelle WB_URL umgeschrieben werden sollen. Wird z.B. benötigt, wenn mehrere Domains über Symlinks auf ein gemeinsames Medien Verzeichnis zugreifen. Trennen Sie die Einträge durch ein Komma.');
 define('tweak_desc_cfg_check_alt_tags',						'Prüfen, ob ALT Attribute gesetzt sind (1=JA, 0=Nein).');
 define('tweak_desc_cfg_class_fancybox',						'CSS Klasse die imageTweak dazu veranlasst, einen LINK für die Fancybox zu setzen. Das Vorschaubild (Thumbnail) wird optimiert, die Fancybox zeigt das Originalbild an. Die Fancybox muss hierzu installiert sein.');
 define('tweak_desc_cfg_class_no_tweak',						'CSS Klasse die imageTweak dazu veranlasst ein Bild zu ignorieren und keine Änderungen durchzuführen');
@@ -111,6 +112,7 @@ define('tweak_intro_cfg',													'<p>Bearbeiten Sie die Einstellungen für 
 define('tweak_intro_log',													'<p><b>imageTweak</b> protokolliert verschiedene Ereignisse und Fehler, die während des Betriebs auftreten.</p>');
 define('tweak_intro_log_no_entries',							'<p>Es liegen keine LOG Einträge vor!</p>');
 
+define('tweak_label_cfg_change_url2wb_url',       'Domains umschreiben');
 define('tweak_label_cfg_check_alt_tags',					'ALT Attribute prüfen');
 define('tweak_label_cfg_class_fancybox',					'Fancybox aufrufen');
 define('tweak_label_cfg_class_no_tweak',					'Bild ignorieren');

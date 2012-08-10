@@ -100,6 +100,7 @@ class dbImageTweakCfg extends dbConnectLE {
   const cfgMemoryBuffer			= 'cfgMemoryBuffer';
   const cfgJPEGquality			= 'cfgJPEGquality';
   const cfgClassTweakGallery = 'cfgClassTweakGallery';
+  const cfgChangeURL2WB_URL = 'cfgChangeURL2WB_URL';
 
   public $config_array = array(
   	array('tweak_label_cfg_exec', self::cfgTweakExec, self::type_boolean, '1', 'tweak_desc_cfg_exec'),
@@ -118,13 +119,25 @@ class dbImageTweakCfg extends dbConnectLE {
   	array('tweak_label_cfg_fancybox_rel', self::cfgFancyboxRel, self::type_string, 'fancybox', 'tweak_desc_cfg_fancybox_rel'),
   	array('tweak_label_cfg_memory_buffer', self::cfgMemoryBuffer, self::type_integer, '4', 'tweak_desc_cfg_memory_buffer'),
   	array('tweak_label_cfg_jpeg_quality', self::cfgJPEGquality, self::type_integer, '90', 'tweak_desc_cfg_jpeg_quality'),
-  	array('tweak_label_cfg_class_tweak_gallery', self::cfgClassTweakGallery, self::type_string, 'tweak-gallery', 'tweak_desc_cfg_class_tweak_gallery')
+  	array('tweak_label_cfg_class_tweak_gallery', self::cfgClassTweakGallery, self::type_string, 'tweak-gallery', 'tweak_desc_cfg_class_tweak_gallery'),
+    array('tweak_label_cfg_change_url2wb_url', self::cfgChangeURL2WB_URL, self::type_array, '', 'tweak_desc_cfg_change_url2wb_url')
   );
 
+  protected static $config_file = 'config.json';
+  protected static $table_prefix = TABLE_PREFIX;
+
   public function __construct($createTables = false) {
-  	$this->createTables = $createTables;
-  	parent::__construct();
-  	$this->setTableName('mod_img_tweak_config');
+    // create table?
+    $this->createTables = $createTables;
+    // use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_img_tweak_config');
   	$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
   	$this->addFieldDefinition(self::field_name, "VARCHAR(32) NOT NULL DEFAULT ''");
   	$this->addFieldDefinition(self::field_type, "TINYINT UNSIGNED NOT NULL DEFAULT '".self::type_undefined."'");
@@ -417,10 +430,21 @@ class dbImageTweakLog extends dbConnectLE {
 
 	private $createTables 	= false;
 
+	protected static $config_file = 'config.json';
+	protected static $table_prefix = TABLE_PREFIX;
+
 	public function __construct($createTables = false) {
-  	$this->createTables = $createTables;
-  	parent::__construct();
-  	$this->setTableName('mod_img_tweak_log');
+	  // create table?
+	  $this->createTables = $createTables;
+	  // use another table prefix?
+	  if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+	    $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+	    if (isset($config['table_prefix']))
+	      self::$table_prefix = $config['table_prefix'];
+	  }
+	  parent::__construct();
+	  $this->setTablePrefix(self::$table_prefix);
+	  $this->setTableName('mod_img_tweak_log');
   	$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
   	$this->addFieldDefinition(self::field_category, "VARCHAR(20) NOT NULL DEFAULT ''");
   	$this->addFieldDefinition(self::field_page_id, "INT(11) NOT NULL DEFAULT '-1'");

@@ -71,6 +71,7 @@ class processContent {
     const cfgMemoryLimit = 'cfgMemoryLimit';
     const cfgMemoryBuffer = 'cfgMemoryBuffer';
     const cfgJPEGquality = 'cfgJPEGquality';
+    const cfgChangeURL2WB_URL = 'cfgChangeURL2WB_URL';
 
     private $settings = array(
             self::cfgTweakExec => 'cfgTweakExec',
@@ -87,7 +88,8 @@ class processContent {
             self::cfgFancyboxGrp => 'cfgFancyboxGrp',
             self::cfgMemoryLimit => 'cfgMemoryLimit',
             self::cfgMemoryBuffer => 'cfgMemoryBuffer',
-            self::cfgJPEGquality => 'cfgJPEGquality'
+            self::cfgJPEGquality => 'cfgJPEGquality',
+            self::cfgChangeURL2WB_URL => 'cfgChangeURL2WB_URL'
             );
 
     const classCrop = 'crop';
@@ -98,42 +100,70 @@ class processContent {
     const classZoom = 'zoom';
     const classNoCache = 'no-cache';
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        if ($this->getSettings()) {
-            $tweaked = $this->settings[self::cfgTweakImageDir];
-            $tweaked = $this->removeLeadingSlash($this->addSlash($tweaked));
-            $this->tweak_path = WB_PATH . MEDIA_DIRECTORY . '/' . $tweaked;
-            $this->tweak_path .= (defined('TOPIC_ID')) ? 'topics/' . TOPIC_ID . '/' : 'pages/' . PAGE_ID . '/';
-            if (! file_exists($this->tweak_path)) {
-                if (! mkdir($this->tweak_path, 0755, true)) {
-                    $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_mkdir, $this->tweak_path)));
-                } else {
-                    $this->writeLog(sprintf(tweak_log_mkdir, $this->tweak_path), 'info');
-                }
-            }
-            $this->tweak_url = str_replace(WB_PATH, WB_URL, $this->tweak_path);
-            $this->media_url = WB_URL . MEDIA_DIRECTORY . '/';
+    protected static $config_file = 'config.json';
+    protected static $table_prefix = TABLE_PREFIX;
 
-            // Memory Limit in MB aus der Konfiguration
-            $limit = $this->settings[self::cfgMemoryLimit];
-            // Umrechnung in Bytes
-            $this->memory_limit = $limit * 1024 * 1024;
-            if (($this->memory_limit > 0) && (false === (ini_set("memory_limit", sprintf("%sM", $limit))))) {
-                // Fehler beim Setzen des neuen Memory Limits
-                $this->setError(sprintf(tweak_error_set_memory_limit, $this->memory_limit));
-            } else {
-                $limit = ini_get('memory_limit');
-                $this->memory_limit = $this->iniReturnBytes($limit);
-            }
-            // maximale Speichernutzung festlegen
-            $buffer = $this->settings[self::cfgMemoryBuffer] * 1024 * 1024;
-            $this->memory_max = $this->memory_limit - $buffer;
+  /**
+   * Constructor
+   */
+  public function __construct() {
+    // use another table prefix?
+    if (file_exists(WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/config.json'), true);
+      if (isset($config['table_prefix'])) self::$table_prefix = $config['table_prefix'];
+    }
+
+    if ($this->getSettings()) {
+      $tweaked = $this->settings[self::cfgTweakImageDir];
+      $tweaked = $this->removeLeadingSlash($this->addSlash($tweaked));
+      // check if old tweak directories exists
+      if (file_exists(WB_PATH . MEDIA_DIRECTORY . '/' . $tweaked.'pages')) {
+        self::rrmdir(WB_PATH . MEDIA_DIRECTORY . '/' . $tweaked.'pages');
+        self::rrmdir(WB_PATH . MEDIA_DIRECTORY . '/' . $tweaked.'topics');
+      }
+      $url_dir = substr(WB_URL, strpos(WB_URL, '://')+3);
+      $url_dir = $this->addSlash($url_dir);
+      $this->tweak_path = WB_PATH . MEDIA_DIRECTORY . '/' . $tweaked .$url_dir;
+      $this->tweak_path .= (defined('TOPIC_ID')) ? 'topics/' . TOPIC_ID . '/' : 'pages/' . PAGE_ID . '/';
+      if (!file_exists($this->tweak_path)) {
+        if (!mkdir($this->tweak_path, 0755, true)) {
+          $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(tweak_error_mkdir, $this->tweak_path)));
         }
-    } // __construct()
+        else {
+          $this->writeLog(sprintf(tweak_log_mkdir, $this->tweak_path), 'info');
+        }
+      }
+      $this->tweak_url = str_replace(WB_PATH, WB_URL, $this->tweak_path);
+      $this->media_url = WB_URL . MEDIA_DIRECTORY . '/';
 
+      // Memory Limit in MB aus der Konfiguration
+      $limit = $this->settings[self::cfgMemoryLimit];
+      // Umrechnung in Bytes
+      $this->memory_limit = $limit * 1024 * 1024;
+      if (($this->memory_limit > 0) && (false === (ini_set("memory_limit", sprintf("%sM", $limit))))) {
+        // Fehler beim Setzen des neuen Memory Limits
+        $this->setError(sprintf(tweak_error_set_memory_limit, $this->memory_limit));
+      }
+      else {
+        $limit = ini_get('memory_limit');
+        $this->memory_limit = $this->iniReturnBytes($limit);
+      }
+      // maximale Speichernutzung festlegen
+      $buffer = $this->settings[self::cfgMemoryBuffer] * 1024 * 1024;
+      $this->memory_max = $this->memory_limit - $buffer;
+    }
+  } // __construct()
+
+
+  protected static function rrmdir($dir) {
+    foreach(glob($dir . '/*') as $file) {
+      if(is_dir($file))
+        self::rrmdir($file);
+      else
+        unlink($file);
+    }
+    rmdir($dir);
+  } // rrmdir()
 
     public function setError($error) {
         $this->error = $error;
@@ -153,7 +183,7 @@ class processContent {
 
     private function writeLog($message, $message_type) {
         global $database;
-        $SQL = sprintf("INSERT INTO %smod_img_tweak_log (log_category, log_page_id, log_text) VALUES ('%s','%s','%s')", TABLE_PREFIX, $message_type, PAGE_ID, $message);
+        $SQL = sprintf("INSERT INTO %smod_img_tweak_log (log_category, log_page_id, log_text) VALUES ('%s','%s','%s')", self::$table_prefix, $message_type, PAGE_ID, $message);
         // just write to LOG - here is no chance to trigger any errors
         $database->query($SQL);
     } // writeLog()
@@ -172,7 +202,7 @@ class processContent {
 
     private function getSettings() {
         global $database;
-        $SQL = "SELECT cfg_name, cfg_value FROM " . TABLE_PREFIX . "mod_img_tweak_config WHERE cfg_status = '1'";
+        $SQL = "SELECT cfg_name, cfg_value FROM " . self::$table_prefix . "mod_img_tweak_config WHERE cfg_status = '1'";
         $result = $database->query($SQL);
         if ($database->is_error()) {
             $this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $database->get_error()));
@@ -198,6 +228,7 @@ class processContent {
                 case self::cfgIgnoreTopicIDs:
                 case self::cfgIgnorePageIDs:
                 case self::cfgExtensions:
+                case self::cfgChangeURL2WB_URL:
                     // array field
                     $this->settings[$data['cfg_name']] = explode(",", $data['cfg_value']);
                     break;
@@ -278,6 +309,11 @@ class processContent {
         if (in_array(PAGE_ID, $this->settings[self::cfgIgnorePageIDs])) return $content;
         // pruefen ob die TOPIC_ID ignoriert werden soll
         if (defined('TOPIC_ID') && (in_array(TOPIC_ID, $this->settings[self::cfgIgnoreTopicIDs]))) return $content;
+        // replace URLs?
+        if (!empty($this->settings[self::cfgChangeURL2WB_URL]) && in_array(WB_URL, $this->settings[self::cfgChangeURL2WB_URL])) {
+          //$search = array('https://phpmanufaktur.de','https://addons.phpmanufaktur.de/','https://blog.phpmanufaktur.de/','https://media.phpmanufaktur.de/','https://usergroup.phpmanufaktur.de/');
+          $content = str_replace($this->settings[self::cfgChangeURL2WB_URL], WB_URL, $content);
+        }
         // Inhalt uebernehmen
         $this->setContent($content);
         // Inhalt pruefen und zurueckgeben
