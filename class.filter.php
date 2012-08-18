@@ -309,11 +309,6 @@ class processContent {
         if (in_array(PAGE_ID, $this->settings[self::cfgIgnorePageIDs])) return $content;
         // pruefen ob die TOPIC_ID ignoriert werden soll
         if (defined('TOPIC_ID') && (in_array(TOPIC_ID, $this->settings[self::cfgIgnoreTopicIDs]))) return $content;
-        // replace URLs?
-        if (!empty($this->settings[self::cfgChangeURL2WB_URL]) && in_array(WB_URL, $this->settings[self::cfgChangeURL2WB_URL])) {
-          //$search = array('https://phpmanufaktur.de','https://addons.phpmanufaktur.de/','https://blog.phpmanufaktur.de/','https://media.phpmanufaktur.de/','https://usergroup.phpmanufaktur.de/');
-          $content = str_replace($this->settings[self::cfgChangeURL2WB_URL], WB_URL, $content);
-        }
         // Inhalt uebernehmen
         $this->setContent($content);
         // Inhalt pruefen und zurueckgeben
@@ -351,7 +346,17 @@ class processContent {
                         return $this->content;
                     }
                     // nur Bilder pruefen, die sich im /MEDIA Verzeichnis befinden
-                    if (! empty($img) && isset($img['src']) && ((strpos($img['src'], $this->media_url) !== false) && (strpos($img['src'], $this->media_url) == 0))) {
+                    if (!empty($img) && isset($img['src'])) {
+                      if (!empty($this->settings[self::cfgChangeURL2WB_URL])) {
+                        // check if an URL should be replaced by WB_URL ...
+                        foreach ($this->settings[self::cfgChangeURL2WB_URL] as $replace) {
+                          if ((strpos($img['src'], $replace) !== false ) && (strpos($img['src'], $replace) == 0)) {
+                            $img['src'] = str_replace($replace, WB_URL, $img['src']);
+                            break;
+                          }
+                        }
+                      }
+                      if ((strpos($img['src'], $this->media_url) !== false) && (strpos($img['src'], $this->media_url) == 0)) {
                         $org_src = $img['src'];
                         $classes = array();
                         // Bild pruefen, bei Fehler abbrechen
@@ -377,6 +382,7 @@ class processContent {
                             $this->content = str_replace($img_tag, $new_tag, $this->content);
                         }
                     }
+                  }
                 }
             }
         }

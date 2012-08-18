@@ -11,7 +11,7 @@ Release 0.53 - JUST IN PROGRESS
 * added setting cfgChangeURL2WB_URL, enable the rewriting of the specified URL's
   to the active WB_URL
 * imageTweak now stores the optimized images in a subdirectory with the WB_URL,
-  this enable imageTweak to handle multiple domains
+  this enable imageTweak to handle multiple domains at the same time
 
 Release 0.52 - 2012-06-15
 
