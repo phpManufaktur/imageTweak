@@ -78,7 +78,8 @@ if (defined('LEPTON_VERSION')) {
 		$error .= '<p>Missing LEPTON outputInterface, can\'t register imageTweak - installation is not complete!</p>';
 	}
 	else {
-		if (!function_exists('register_output_filter')) include_once(WB_PATH .'/modules/output_interface/output_interface.php');
+		if (!function_exists('register_output_filter'))
+		  include_once(WB_PATH .'/modules/output_interface/output_interface.php');
 		register_output_filter('image_tweak', 'imageTweak');
 	}
 } // LEPTON
