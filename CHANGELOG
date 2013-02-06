@@ -4,7 +4,7 @@
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
-Release 0.53 - JUST IN PROGRESS
+Release 0.53 - 2013-02-06
 
 * added ability to change the table prefix easy via config.json, please read
   <http://yals.de/OQRv0Y> for more informations
@@ -12,6 +12,7 @@ Release 0.53 - JUST IN PROGRESS
   to the active WB_URL
 * imageTweak now stores the optimized images in a subdirectory with the WB_URL,
   this enable imageTweak to handle multiple domains at the same time
+* updated precheck.php to actual versions
 
 Release 0.52 - 2012-06-15
 

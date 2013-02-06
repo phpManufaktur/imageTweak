@@ -35,8 +35,8 @@ else {
 
 $PRECHECK['PHP_VERSION'] = array('VERSION' => '5.2.0', 'OPERATOR' => '>=');
 $PRECHECK['WB_ADDONS'] = array(
-        'dbconnect_le' => array('VERSION' => '0.64', 'OPERATOR' => '>='),
-        'dwoo' => array('VERSION' => '0.10', 'OPERATOR' => '>='),
+        'dbconnect_le' => array('VERSION' => '0.69', 'OPERATOR' => '>='),
+        'dwoo' => array('VERSION' => '0.17', 'OPERATOR' => '>='),
         'kit_tools' => array('VERSION' => '0.16', 'OPERATOR' => '>='),
         'wblib' => array('VERSION' => '0.65', 'OPERATOR' => '>='),
         'libraryadmin' => array('VERSION' => '1.9', 'OPERATOR' => '>='),
