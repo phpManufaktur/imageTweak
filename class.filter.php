@@ -243,6 +243,7 @@ class processContent {
         }
         // pruefen ob alle Felder initialisiert wurden
         foreach ($this->settings as $key => $value) {
+            if (is_array($value)) continue;
             if ($key == (string) $value) {
                 if ($this->initializeSettings()) {
                     // Konfiguration neu initialisiert
@@ -350,6 +351,7 @@ class processContent {
                       if (!empty($this->settings[self::cfgChangeURL2WB_URL])) {
                         // check if an URL should be replaced by WB_URL ...
                         foreach ($this->settings[self::cfgChangeURL2WB_URL] as $replace) {
+                          if ($replace=='') continue;
                           if ((strpos($img['src'], $replace) !== false ) && (strpos($img['src'], $replace) == 0)) {
                             $img['src'] = str_replace($replace, WB_URL, $img['src']);
                             break;

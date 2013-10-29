@@ -83,6 +83,17 @@ if (defined('LEPTON_VERSION')) {
 		register_output_filter('image_tweak', 'imageTweak');
 	}
 } // LEPTON
+elseif(defined('CAT_VERSION')) {
+    // register imageTweak at BlackCat Filter
+	if (!file_exists(WB_PATH .'/modules/blackcatFilter/filter.php')) {
+		$error .= '<p>Missing BlackCat Filter, can\'t register imageTweak - installation is not complete!</p>';
+	}
+	else {
+		if (!function_exists('register_filter'))
+		  include_once(WB_PATH .'/modules/blackcatFilter/filter.php');
+		register_filter('imageTweak','image_tweak','optimize images on the fly while delivering pages of your website to the browser');
+	}
+} // BlackCat
 else {
 	// WebsiteBaker - must patch output filter to get imageTweak working...
 	function isPatched($filename) {

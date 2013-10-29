@@ -495,7 +495,7 @@ class tweakBackend {
 
 } // class tweakBackend
 
-$backend = new tweakBackend();
-$backend->action();
+$tweakbackend = new tweakBackend();
+$tweakbackend->action();
 
 ?>

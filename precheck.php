@@ -36,15 +36,21 @@ else {
 $PRECHECK['PHP_VERSION'] = array('VERSION' => '5.2.0', 'OPERATOR' => '>=');
 $PRECHECK['WB_ADDONS'] = array(
         'dbconnect_le' => array('VERSION' => '0.69', 'OPERATOR' => '>='),
-        'dwoo' => array('VERSION' => '0.17', 'OPERATOR' => '>='),
         'kit_tools' => array('VERSION' => '0.16', 'OPERATOR' => '>='),
         'wblib' => array('VERSION' => '0.65', 'OPERATOR' => '>='),
         'libraryadmin' => array('VERSION' => '1.9', 'OPERATOR' => '>='),
-        'lib_jquery' => array('VERSION' => '1.25', 'OPERATOR' => '>='),
 );
 
-if (!defined('LEPTON_VERSION')) $PRECHECK['WB_ADDONS']['output_filter'] = array('VERSION' => '0.1', 'OPERATOR' => '>=');
+if (!defined('LEPTON_VERSION')&&!defined('CAT_VERSION'))
+{
+    $PRECHECK['WB_ADDONS']['output_filter'] = array('VERSION' => '0.1', 'OPERATOR' => '>=');
+}
 
+if(!defined('CAT_VERSION'))
+{
+    $PRECHECK['WB_ADDONS']['dwoo']          = array('VERSION' => '0.17', 'OPERATOR' => '>=');
+    $PRECHECK['WB_ADDONS']['lib_jquery']    = array('VERSION' => '1.25', 'OPERATOR' => '>=');
+}
 
 global $database;
 // check for UTF-8 charset

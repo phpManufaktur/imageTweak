@@ -1,8 +1,15 @@
 ### imageTweak
 
-(c) 2008 - 2012 by phpManufaktur
+(c) 2008 - 2013 by phpManufaktur
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
+
+Release 0.54 - 2013-10-29
+
+* Fixed precheck.php for use with BlackCat CMS v1.0
+* Fixed tool.php for use with BlackCat CMS v1.0
+  ($backend renamed to $tweakbackend)
+* fixed notices loading language files (BC)
 
 Release 0.53 - 2013-02-06
 
@@ -29,13 +36,13 @@ Release 0.52 - 2012-06-15
 Release 0.51 - 2011-11-15
 
 * fixed problem with installation of the droplet
-* changed bondage of jQuery, the droplet [[it_gallery]] can now automatically 
+* changed bondage of jQuery, the droplet [[it_gallery]] can now automatically
   load the needed jQuery libraries
 * fixed precheck.php does not check for kitTools
 
 Release 0.50 - 2011-11-12
 
-* added gallery mode with class 'tweak-gallery' to force imageTweak to prompt a 
+* added gallery mode with class 'tweak-gallery' to force imageTweak to prompt a
   title below the image
 * added droplet [[it_gallery]] enable to create a folder gallery
 
@@ -68,7 +75,7 @@ Release 0.44 - 2011-02-20
 
 Release 0.43 - 2011-02-19
 
-* changed improved memory handling to avoid fatal errors if memory limit is 
+* changed improved memory handling to avoid fatal errors if memory limit is
   too small
 * added skip zoomed images
 
@@ -76,7 +83,7 @@ Release 0.42 - 2011-02-19
 
 * added class and parameters for automatically executing Fancybox
 * added option for increasing memory limit
-* added handling if CSS is used within <img /> tag for setting dimensions 
+* added handling if CSS is used within <img /> tag for setting dimensions
   instead of height and width attributes
 
 Release 0.41 - 2011-02-18
