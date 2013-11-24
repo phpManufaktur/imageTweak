@@ -5,7 +5,7 @@
  *
  * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2008-2012
+ * @copyright 2008-2013
  * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
@@ -40,9 +40,10 @@ if (! file_exists(WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/langua
 
 require_once (WB_PATH . '/framework/functions.php');
 
-function tweakImages($content) {
+function tweakImages(&$content) {
     $tweak = new processContent();
-    return $tweak->exec($content);
+    $content = $tweak->exec($content);
+    return $content;
 } // tweakImages()
 
 

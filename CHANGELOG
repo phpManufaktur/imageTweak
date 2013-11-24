@@ -4,6 +4,12 @@
 Ralf Hertsch, Stockholmer Str. 31, 13359 Berlin (Germany)
 http://phpManufaktur.de - ralf.hertsch@phpManufaktur.de
 
+Release 0.55 - 2013-11-24
+
+* general program maintenance
+* fixed a problem recognizing the correct output filter
+* added icon.png (BlackCat CMS) and tool_icon.png (WebsiteBaker 2.8.4)
+
 Release 0.54 - 2013-10-29
 
 * Fixed precheck.php for use with BlackCat CMS v1.0

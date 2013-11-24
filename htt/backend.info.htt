@@ -7,7 +7,7 @@
     <tr>
       <td class="copyright_hint">
         <h2>imageTweak</h2>
-        <p><b>Release {$version}</b> - &copy 2008 - 2011 by phpManufaktur, Ralf Hertsch (Berlin)</p>
+        <p><b>Release {$version}</b> - &copy 2008 - 2013 by phpManufaktur, Ralf Hertsch (Berlin)</p>
         <p class="copyright_address"><b>phpManufaktur</b><br />Ralf Hertsch<br />Stockholmer Str. 31<br />13359 Berlin</p>
         <p class="copyright_contact">
           <a href="http://phpmanufaktur.de/image_tweak" target="_blank">http://phpManufaktur.de</a><br />
